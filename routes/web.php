@@ -36,6 +36,10 @@ Route::middleware('auth')->group(function () {
         return view('manual-book');
     })->name('manual-book');
 
+    Route::get('/tentang-kami', function() {
+        return view('tentang-kami');
+    })->name('tentang-kami');
+
     Route::prefix('keuangan')->name('keuangan.')->group(function () {
         Route::get('/laba-rugi', [KeuanganController::class, 'labaRugi'])->name('laba-rugi');
         Route::get('/neraca', [KeuanganController::class, 'neraca'])->name('neraca');

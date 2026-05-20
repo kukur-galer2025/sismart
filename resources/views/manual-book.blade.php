@@ -2,92 +2,164 @@
 @section('title', 'Manual Book & Rumus Sistem')
 
 @section('content')
-<div class="max-w-5xl mx-auto space-y-6">
-    <div class="glass rounded-2xl p-6 sm:p-8">
-        <h2 class="text-2xl font-bold mb-2 flex items-center gap-3" style="color:var(--text-primary)">
-            <i class="fas fa-book-open text-indigo-500"></i> Manual Book & Penjelasan Rumus
+<div class="max-w-6xl mx-auto space-y-8">
+    
+    {{-- Header --}}
+    <div class="glass rounded-3xl p-8 text-center relative overflow-hidden">
+        <div class="absolute -top-24 -left-24 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl"></div>
+        <h2 class="text-2xl md:text-3xl font-extrabold mb-3 flex items-center justify-center gap-3" style="color:var(--text-primary)">
+            <i class="fas fa-book-open text-indigo-500"></i> Dokumentasi Rumus & Aturan Sistem
         </h2>
-        <p class="text-sm mb-8" style="color:var(--text-muted)">Halaman ini berisi dokumentasi rumus-rumus otomatis yang berjalan di belakang layar SISmart untuk memudahkan Admin memahami angka yang muncul di laporan.</p>
+        <p class="text-sm md:text-base max-w-2xl mx-auto" style="color:var(--text-secondary)">
+            Panduan lengkap mengenai perhitungan matematis, logika penentuan status, serta algoritma pencatatan otomatis yang tertanam di dalam sistem SISmart.
+        </p>
+    </div>
 
-        <div class="space-y-8">
+    {{-- Grid Konten --}}
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        {{-- 1. Penilaian Stok & Harga Pokok Penjualan (HPP) --}}
+        <div class="glass rounded-2xl p-6 space-y-5 relative overflow-hidden group">
+            <div class="flex items-center gap-3 border-b pb-4" style="border-color:var(--border-color)">
+                <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-500 flex items-center justify-center text-lg"><i class="fas fa-calculator"></i></div>
+                <h3 class="text-lg font-bold" style="color:var(--text-primary)">1. Penilaian HPP & Laba</h3>
+            </div>
             
-            {{-- 1. Penilaian Stok --}}
-            <section>
-                <h3 class="text-lg font-bold mb-3 flex items-center gap-2" style="color:var(--text-primary)"><i class="fas fa-boxes text-emerald-500"></i> 1. Metode Penilaian Stok & HPP</h3>
-                <div class="grid sm:grid-cols-2 gap-4">
-                    <div class="p-4 rounded-xl border" style="background:var(--bg-input);border-color:var(--border-color)">
-                        <h4 class="font-bold text-sm mb-2" style="color:var(--text-primary)">Metode Rata-rata (Average)</h4>
-                        <p class="text-xs mb-3" style="color:var(--text-secondary)">Nilai barang dihitung berdasarkan harga rata-rata semua barang yang masuk.</p>
-                        <div class="p-3 rounded-lg text-xs font-mono font-bold" style="background:var(--bg-sidebar);color:var(--text-primary);border:1px solid var(--border-color)">
-                            HPP = (Total Nilai Stok Lama + Total Nilai Masuk Baru) / Total Qty Stok
-                        </div>
+            <div class="space-y-4">
+                <div class="p-4 rounded-xl border transition-colors hover:border-cyan-500/30" style="background:var(--bg-input);border-color:var(--border-color)">
+                    <h4 class="font-bold text-sm mb-1 flex justify-between" style="color:var(--text-primary)"><span>Metode Rata-rata (Average)</span></h4>
+                    <p class="text-[11px] mb-2 leading-relaxed" style="color:var(--text-secondary)">Nilai modal barang dihitung dari rata-rata nilai seluruh barang yang masuk ke gudang. HPP berubah dinamis setiap ada barang baru masuk.</p>
+                    <div class="p-2.5 rounded-lg text-xs font-mono font-bold" style="background:var(--bg-sidebar);color:var(--text-primary);border:1px solid var(--border-color)">
+                        HPP = (Total Nilai Stok Lama + Nilai Masuk Baru) / Total Qty Stok
                     </div>
-                    <div class="p-4 rounded-xl border" style="background:var(--bg-input);border-color:var(--border-color)">
-                        <h4 class="font-bold text-sm mb-2" style="color:var(--text-primary)">Metode FIFO (First In First Out)</h4>
-                        <p class="text-xs mb-3" style="color:var(--text-secondary)">Barang yang keluar diasumsikan mengambil harga modal dari barang yang paling pertama masuk.</p>
-                        <div class="p-3 rounded-lg text-xs font-mono font-bold" style="background:var(--bg-sidebar);color:var(--text-primary);border:1px solid var(--border-color)">
-                            Harga Keluar = Harga Batch Masuk Terlama yang belum habis
+                </div>
+
+                <div class="p-4 rounded-xl border transition-colors hover:border-cyan-500/30" style="background:var(--bg-input);border-color:var(--border-color)">
+                    <h4 class="font-bold text-sm mb-1 flex justify-between" style="color:var(--text-primary)"><span>Metode FIFO (First-In, First-Out)</span></h4>
+                    <p class="text-[11px] mb-2 leading-relaxed" style="color:var(--text-secondary)">Barang yang dikeluarkan akan mengambil harga modal dari urutan <i>batch</i> (gelombang) barang yang paling awal masuk (paling tua).</p>
+                    <div class="p-2.5 rounded-lg text-xs font-mono font-bold" style="background:var(--bg-sidebar);color:var(--text-primary);border:1px solid var(--border-color)">
+                        HPP = Harga pada Batch Tertua yg Stoknya > 0
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-xl border transition-colors hover:border-emerald-500/30" style="background:var(--bg-input);border-color:var(--border-color)">
+                    <h4 class="font-bold text-sm mb-1 flex justify-between" style="color:var(--text-primary)"><span>Laba / Rugi Transaksi</span></h4>
+                    <p class="text-[11px] mb-2 leading-relaxed" style="color:var(--text-secondary)">Selisih antara harga yang ditawarkan ke pelanggan dengan Harga Pokok Penjualan (HPP).</p>
+                    <div class="p-2.5 rounded-lg text-xs font-mono font-bold" style="background:var(--bg-sidebar);color:var(--text-primary);border:1px solid var(--border-color)">
+                        Laba Kotor = (Harga Jual - Harga Modal HPP) × Qty Terjual
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- 2. Manajemen Persediaan & Status --}}
+        <div class="glass rounded-2xl p-6 space-y-5 relative overflow-hidden group">
+            <div class="flex items-center gap-3 border-b pb-4" style="border-color:var(--border-color)">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center text-lg"><i class="fas fa-shield-alt"></i></div>
+                <h3 class="text-lg font-bold" style="color:var(--text-primary)">2. Formula Persediaan & Status</h3>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="p-4 rounded-xl border transition-colors hover:border-amber-500/30" style="background:var(--bg-input);border-color:var(--border-color)">
+                    <h4 class="font-bold text-sm mb-1" style="color:var(--text-primary)">Safety Stock & Reorder Point</h4>
+                    <p class="text-[11px] mb-2 leading-relaxed" style="color:var(--text-secondary)">Sistem menggunakan perhitungan persediaan modern untuk menentukan kapan Anda harus memesan barang dan berapa batas amannya.</p>
+                    <div class="space-y-2">
+                        <div class="p-2 rounded text-xs font-mono font-bold flex gap-2 items-center" style="background:var(--bg-sidebar);color:var(--text-primary);border:1px solid var(--border-color)">
+                            <span class="text-amber-500">SS =</span> (Pemakaian Maksimum - Pemakaian Rata-rata) × Lead Time
+                        </div>
+                        <div class="p-2 rounded text-xs font-mono font-bold flex gap-2 items-center" style="background:var(--bg-sidebar);color:var(--text-primary);border:1px solid var(--border-color)">
+                            <span class="text-indigo-500">ROP =</span> (Pemakaian Rata-rata × Lead Time) + Safety Stock
                         </div>
                     </div>
                 </div>
-            </section>
 
-            {{-- 2. Manajemen Persediaan --}}
-            <section>
-                <h3 class="text-lg font-bold mb-3 flex items-center gap-2" style="color:var(--text-primary)"><i class="fas fa-shield-alt text-amber-500"></i> 2. Rumus Safety Stock & Reorder Point</h3>
-                <div class="p-5 rounded-xl border space-y-5" style="background:var(--bg-input);border-color:var(--border-color)">
-                    <div>
-                        <h4 class="font-bold text-sm mb-1" style="color:var(--text-primary)">Safety Stock (Stok Aman)</h4>
-                        <p class="text-xs mb-2" style="color:var(--text-secondary)">Batas jumlah barang paling minimum untuk menghindari kehabisan stok akibat keterlambatan pengiriman.</p>
-                        <div class="inline-block p-2 rounded-md text-xs font-mono font-bold" style="background:var(--bg-sidebar);color:var(--text-primary);border:1px solid var(--border-color)">
-                            Safety Stock = (Pemakaian Maksimal × Lead Time) - (Pemakaian Rata-rata × Lead Time)
-                        </div>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-sm mb-1" style="color:var(--text-primary)">Reorder Point (Titik Pemesanan Kembali)</h4>
-                        <p class="text-xs mb-2" style="color:var(--text-secondary)">Titik di mana admin harus mulai memesan barang lagi ke supplier.</p>
-                        <div class="inline-block p-2 rounded-md text-xs font-mono font-bold" style="background:var(--bg-sidebar);color:var(--text-primary);border:1px solid var(--border-color)">
-                            Reorder Point = (Pemakaian Rata-rata × Lead Time) + Safety Stock
-                        </div>
-                        <p class="text-xs mt-2 italic text-rose-500">*Sistem akan melabeli stok sebagai "Kritis" jika [Sisa Stok <= Reorder Point]</p>
+                <div class="p-4 rounded-xl border transition-colors hover:border-amber-500/30" style="background:var(--bg-input);border-color:var(--border-color)">
+                    <h4 class="font-bold text-sm mb-2" style="color:var(--text-primary)">Indikator Status Stok (Otomatis)</h4>
+                    <ul class="text-[11px] space-y-3" style="color:var(--text-secondary)">
+                        <li class="flex items-center gap-2">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/10 text-rose-500 w-16 text-center">Habis</span>
+                            <span>Jika <b>Total Stok = 0</b>.</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-500 w-16 text-center">Kritis</span>
+                            <span>Jika <b>Total Stok ≤ Safety Stock</b> (Sangat Mendesak).</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/10 text-indigo-500 w-16 text-center">Reorder</span>
+                            <span>Jika <b>Total Stok ≤ Reorder Point</b> (Harus segera dipesan).</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-500 w-16 text-center">Aman</span>
+                            <span>Jika <b>Total Stok > Reorder Point</b>.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        {{-- 3. Rasio Perputaran & Jurnal Keuangan --}}
+        <div class="glass rounded-2xl p-6 space-y-5 relative overflow-hidden group">
+            <div class="flex items-center gap-3 border-b pb-4" style="border-color:var(--border-color)">
+                <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-500 flex items-center justify-center text-lg"><i class="fas fa-chart-bar"></i></div>
+                <h3 class="text-lg font-bold" style="color:var(--text-primary)">3. Rasio Kecepatan & Jurnal</h3>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="p-4 rounded-xl border transition-colors hover:border-purple-500/30" style="background:var(--bg-input);border-color:var(--border-color)">
+                    <h4 class="font-bold text-sm mb-1 flex justify-between" style="color:var(--text-primary)"><span>Inventory Turnover Ratio (Perputaran Stok)</span></h4>
+                    <p class="text-[11px] mb-2 leading-relaxed" style="color:var(--text-secondary)">Menunjukkan seberapa cepat suatu barang berputar (terjual/dipakai) dalam suatu periode (bulanan/tahunan). Angka yang tinggi menunjukkan barang laku keras.</p>
+                    <div class="p-2.5 rounded-lg text-xs font-mono font-bold" style="background:var(--bg-sidebar);color:var(--text-primary);border:1px solid var(--border-color)">
+                        Rasio = Total Qty Keluar / Nilai Rata-rata Stok (Tahun/Bulan Ini)
                     </div>
                 </div>
-            </section>
 
-            {{-- 3. Perputaran Stok --}}
-            <section>
-                <h3 class="text-lg font-bold mb-3 flex items-center gap-2" style="color:var(--text-primary)"><i class="fas fa-sync-alt text-cyan-500"></i> 3. Perputaran Stok (Inventory Turnover)</h3>
-                <div class="p-4 rounded-xl border" style="background:var(--bg-input);border-color:var(--border-color)">
-                    <p class="text-xs mb-3" style="color:var(--text-secondary)">Mengukur seberapa cepat barang terjual atau terpakai dalam periode tertentu. Semakin tinggi nilainya, semakin cepat barang tersebut berputar (laku).</p>
-                    <div class="p-3 rounded-lg text-xs font-mono font-bold" style="background:var(--bg-sidebar);color:var(--text-primary);border:1px solid var(--border-color)">
-                        Inventory Turnover Ratio = Total Qty Keluar / Rata-rata Stok<br>
-                        * Rata-rata Stok = (Stok Awal Periode + Stok Akhir Periode) / 2
-                    </div>
-                </div>
-            </section>
-
-            {{-- 4. Keuangan --}}
-            <section>
-                <h3 class="text-lg font-bold mb-3 flex items-center gap-2" style="color:var(--text-primary)"><i class="fas fa-chart-line text-rose-500"></i> 4. Laba Rugi & Jurnal Umum</h3>
-                <div class="grid sm:grid-cols-2 gap-4">
-                    <div class="p-4 rounded-xl border" style="background:var(--bg-input);border-color:var(--border-color)">
-                        <h4 class="font-bold text-sm mb-2" style="color:var(--text-primary)">Laba / Rugi Transaksi</h4>
-                        <p class="text-xs mb-3" style="color:var(--text-secondary)">Keuntungan kotor yang dihitung dari selisih harga jual dan harga modal (HPP) setiap kali barang keluar.</p>
-                        <div class="p-3 rounded-lg text-xs font-mono font-bold" style="background:var(--bg-sidebar);color:var(--text-primary);border:1px solid var(--border-color)">
-                            Laba Kotor = (Harga Jual - Harga Modal) × Qty Keluar
+                <div class="p-4 rounded-xl border transition-colors hover:border-purple-500/30" style="background:var(--bg-input);border-color:var(--border-color)">
+                    <h4 class="font-bold text-sm mb-2" style="color:var(--text-primary)">Jurnal Umum Otomatis</h4>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="p-3 rounded-lg border text-[11px]" style="background:var(--bg-sidebar);border-color:var(--border-color)">
+                            <div class="font-bold mb-1 text-emerald-500"><i class="fas fa-arrow-down mr-1"></i> Barang Masuk</div>
+                            <div style="color:var(--text-secondary)"><b>(Db)</b> Persediaan Barang</div>
+                            <div style="color:var(--text-secondary)"><b>(Cr)</b> Kas / Hutang</div>
+                        </div>
+                        <div class="p-3 rounded-lg border text-[11px]" style="background:var(--bg-sidebar);border-color:var(--border-color)">
+                            <div class="font-bold mb-1 text-rose-500"><i class="fas fa-arrow-up mr-1"></i> Barang Keluar</div>
+                            <div style="color:var(--text-secondary)"><b>(Db)</b> Kas / Piutang</div>
+                            <div style="color:var(--text-secondary)"><b>(Cr)</b> Penjualan</div>
+                            <div class="mt-1 border-t pt-1 border-gray-500/20"></div>
+                            <div style="color:var(--text-secondary)"><b>(Db)</b> Beban Pokok (HPP)</div>
+                            <div style="color:var(--text-secondary)"><b>(Cr)</b> Persediaan Barang</div>
                         </div>
                     </div>
-                    <div class="p-4 rounded-xl border" style="background:var(--bg-input);border-color:var(--border-color)">
-                        <h4 class="font-bold text-sm mb-2" style="color:var(--text-primary)">Pencatatan Jurnal Otomatis</h4>
-                        <ul class="text-xs space-y-2" style="color:var(--text-secondary)">
-                            <li><strong style="color:var(--text-primary)">Saat Barang Masuk:</strong><br> Debit: Persediaan Barang | Kredit: Kas/Hutang</li>
-                            <li><strong style="color:var(--text-primary)">Saat Barang Keluar:</strong><br> Debit: Kas/Piutang | Kredit: Pendapatan Penjualan<br>
-                            Debit: HPP | Kredit: Persediaan Barang</li>
-                        </ul>
-                    </div>
                 </div>
-            </section>
+            </div>
+        </div>
 
+        {{-- 4. Kebijakan Sistem & Penghapusan --}}
+        <div class="glass rounded-2xl p-6 space-y-5 relative overflow-hidden group">
+            <div class="absolute -right-10 -bottom-10 opacity-5 text-rose-500 group-hover:scale-110 transition-transform duration-500"><i class="fas fa-exclamation-triangle text-9xl"></i></div>
+            
+            <div class="flex items-center gap-3 border-b pb-4 relative z-10" style="border-color:var(--border-color)">
+                <div class="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-500 flex items-center justify-center text-lg"><i class="fas fa-trash-alt"></i></div>
+                <h3 class="text-lg font-bold text-rose-500">4. Aturan Penghapusan Data (Cascade)</h3>
+            </div>
+            
+            <div class="p-5 rounded-xl bg-rose-500/10 border border-rose-500/20 relative z-10">
+                <h4 class="font-bold text-sm mb-3 text-rose-600 dark:text-rose-400">🚨 Peringatan Penting (Cascade Delete)</h4>
+                <p class="text-xs mb-4 leading-relaxed" style="color:var(--text-primary)">
+                    Sistem basis data SISmart dirancang dengan relasi yang ketat untuk menjaga integritas pembukuan (tidak boleh ada data transaksi "menggantung" tanpa barang).
+                </p>
+                <ul class="text-[11px] space-y-3" style="color:var(--text-secondary)">
+                    <li class="flex items-start gap-2">
+                        <i class="fas fa-caret-right text-rose-500 mt-0.5"></i> 
+                        <span><b>Hapus Barang:</b> Jika sebuah "Barang" dihapus dari Master Data, maka <strong>SELURUH</strong> riwayat Barang Masuk, Barang Keluar, dan Stok Batch yang berkaitan dengan barang tersebut akan <strong>IKUT TERHAPUS SECARA PERMANEN</strong>. Pastikan data barang sudah tidak dibutuhkan atau memang salah diinput.</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <i class="fas fa-caret-right text-amber-500 mt-0.5"></i> 
+                        <span><b>Hapus Kategori:</b> Jika "Kategori" dihapus, data Barang <strong>TIDAK</strong> akan ikut terhapus. Kategori pada barang tersebut hanya akan berubah menjadi "Kosong" (Nullable).</span>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>

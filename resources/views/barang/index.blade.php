@@ -57,8 +57,13 @@
                             <td class="px-5 py-3 text-center"><span class="px-2 py-0.5 rounded-full text-[10px] {{ $color }}">{{ $status }}</span></td>
                             <td class="px-5 py-3 text-center">
                                 <div class="flex items-center justify-center gap-1">
-                                    <a href="{{ route('barang.show', $b->id) }}" class="p-1.5 rounded-lg hover:bg-indigo-500/10 text-indigo-500 transition-colors"><i class="fas fa-eye text-xs"></i></a>
-                                    <a href="{{ route('barang.edit', $b->id) }}" class="p-1.5 rounded-lg hover:bg-cyan-500/10 text-cyan-500 transition-colors"><i class="fas fa-edit text-xs"></i></a>
+                                    <a href="{{ route('barang.show', $b->id) }}" class="p-1.5 rounded-lg hover:bg-indigo-500/10 text-indigo-500 transition-colors" title="Detail"><i class="fas fa-eye text-xs"></i></a>
+                                    <a href="{{ route('barang.edit', $b->id) }}" class="p-1.5 rounded-lg hover:bg-cyan-500/10 text-cyan-500 transition-colors" title="Edit"><i class="fas fa-edit text-xs"></i></a>
+                                    <form action="{{ route('barang.destroy', $b->id) }}" method="POST" class="inline" x-data @submit.prevent="$dispatch('open-delete-modal', { form: $el, message: 'Hapus barang ini secara permanen? Semua riwayat stok & transaksi akan ikut hilang.' })">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="p-1.5 rounded-lg hover:bg-rose-500/10 text-rose-500 transition-colors" title="Hapus"><i class="fas fa-trash-alt text-xs"></i></button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>

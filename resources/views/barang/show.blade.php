@@ -4,7 +4,16 @@
 <div class="space-y-6">
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <a href="{{ route('barang.index') }}" class="flex items-center gap-2 transition-colors text-sm" style="color:var(--text-muted)"><i class="fas fa-arrow-left"></i> Kembali</a>
-        <a href="{{ route('barang.edit', $barang->id) }}" class="btn-primary text-xs"><i class="fas fa-edit"></i> Edit Barang</a>
+        <div class="flex items-center gap-2">
+            <a href="{{ route('barang.edit', $barang->id) }}" class="btn-primary text-xs"><i class="fas fa-edit"></i> Edit Barang</a>
+            <form action="{{ route('barang.destroy', $barang->id) }}" method="POST" x-data @submit.prevent="$dispatch('open-delete-modal', { form: $el, message: 'Apakah Anda yakin ingin menghapus barang ini secara permanen? Semua riwayat transaksi barang ini juga akan ikut terhapus!' })">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="px-4 py-2 rounded-xl text-xs font-semibold bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white border border-rose-500/20 transition-colors">
+                    <i class="fas fa-trash-alt"></i> Hapus
+                </button>
+            </form>
+        </div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">

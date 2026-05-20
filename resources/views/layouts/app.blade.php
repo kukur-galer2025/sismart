@@ -160,6 +160,7 @@
                         ]],
                         ['Bantuan', [
                             ['manual-book', 'fas fa-book-reader', 'Manual Book', 'manual-book'],
+                            ['tentang-kami', 'fas fa-users', 'Tentang Kami', 'tentang-kami'],
                         ]],
                     ];
                 @endphp
@@ -291,7 +292,26 @@
             </div>
         </div>
     </div>
-
+    {{-- Global Delete Confirmation Modal --}}
+    <div x-data="{ open: false, form: null, message: 'Apakah Anda yakin ingin menghapus data ini?' }"
+         @open-delete-modal.window="open = true; form = $event.detail.form; message = $event.detail.message || message"
+         @keydown.escape.window="open = false"
+         class="relative z-[100] no-print" x-cloak>
+        <div x-show="open" x-transition.opacity class="fixed inset-0 bg-black/60 backdrop-blur-sm"></div>
+        <div x-show="open" x-transition.scale.origin.center class="fixed inset-0 flex items-center justify-center p-4">
+            <div @click.outside="open = false" class="w-full max-w-sm rounded-2xl shadow-2xl p-6 text-center transform transition-all" style="background:var(--bg-card);border:1px solid var(--border-color)">
+                <div class="w-16 h-16 rounded-full bg-rose-500/10 text-rose-500 flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-trash-alt text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-bold mb-2" style="color:var(--text-primary)">Konfirmasi Hapus</h3>
+                <p class="text-sm mb-6" style="color:var(--text-secondary)" x-text="message"></p>
+                <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <button @click="open = false" type="button" class="w-full sm:w-auto px-5 py-2.5 rounded-xl text-sm font-medium transition-colors hover:opacity-80" style="background:var(--bg-input);color:var(--text-primary);border:1px solid var(--border-color)">Batal</button>
+                    <button @click="form.submit()" type="button" class="w-full sm:w-auto px-5 py-2.5 rounded-xl text-sm font-medium bg-rose-500 text-white shadow-lg shadow-rose-500/30 hover:bg-rose-600 transition-colors">Ya, Hapus!</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
