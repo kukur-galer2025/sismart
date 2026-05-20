@@ -7,6 +7,7 @@
     <meta name="theme-color" :content="darkMode ? '#0f0a2e' : '#f0f2f5'">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title>@yield('title', 'Dashboard') - SISmart</title>
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
