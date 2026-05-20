@@ -1,0 +1,325 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Exports\LaporanStokExport;
+use App\Exports\LaporanTransaksiExport;
+use App\Models\Barang;
+use App\Models\BarangMasuk;
+use App\Models\BarangKeluar;
+use App\Models\AkunKeuangan;
+use App\Models\JurnalEntry;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Http\Request;
+
+class ExportController extends Controller
+{
+    // ============ EXCEL EXPORTS ============
+
+    public function stokExcel()
+    {
+        return Excel::download(new LaporanStokExport, 'Laporan_Stok_' . now()->format('Ymd') . '.xlsx');
+    }
+
+    public function transaksiExcel(Request $request)
+    {
+        $dari = $request->dari ?? now()->startOfMonth()->format('Y-m-d');
+        $sampai = $request->sampai ?? now()->format('Y-m-d');
+        return Excel::download(
+            new LaporanTransaksiExport($dari, $sampai),
+            'Laporan_Transaksi_' . $dari . '_' . $sampai . '.xlsx'
+        );
+    }
+
+    public function jurnalExcel(Request $request)
+    {
+        $dari = $request->dari ?? now()->startOfMonth()->format('Y-m-d');
+        $sampai = $request->sampai ?? now()->format('Y-m-d');
+
+        $jurnals = JurnalEntry::with('akun')
+            ->whereBetween('tanggal', [$dari, $sampai])
+            ->orderBy('tanggal', 'desc')
+            ->get();
+
+        // Simple CSV-style Excel via collection export
+        $data = $jurnals->map(function ($j) {
+            return [
+                'Tanggal' => $j->tanggal->format('d/m/Y'),
+                'Akun' => $j->akun->nama ?? '-',
+                'Keterangan' => $j->keterangan ?? '-',
+                'Debit' => $j->debit,
+                'Kredit' => $j->kredit,
+            ];
+        });
+
+        return Excel::download(new \App\Exports\CollectionExport($data, 'Jurnal Umum'), 'Jurnal_' . $dari . '_' . $sampai . '.xlsx');
+    }
+
+    public function barangMasukExcel(Request $request)
+    {
+        $dari = $request->dari ?? now()->startOfMonth()->format('Y-m-d');
+        $sampai = $request->sampai ?? now()->format('Y-m-d');
+
+        $data = BarangMasuk::with('barang', 'user')
+            ->whereBetween('tanggal', [$dari, $sampai])
+            ->orderBy('tanggal', 'desc')
+            ->get()
+            ->map(function ($m) {
+                return [
+                    'Tanggal' => $m->tanggal->format('d/m/Y'),
+                    'Kode' => $m->barang->kode ?? '-',
+                    'Barang' => $m->barang->nama ?? '-',
+                    'Jumlah' => $m->jumlah,
+                    'Harga Satuan' => $m->harga_satuan,
+                    'Total' => $m->total_harga,
+                    'Supplier' => $m->supplier ?? '-',
+                    'User' => $m->user->name ?? '-',
+                ];
+            });
+
+        return Excel::download(new \App\Exports\CollectionExport($data, 'Barang Masuk'), 'Barang_Masuk_' . $dari . '_' . $sampai . '.xlsx');
+    }
+
+    public function barangKeluarExcel(Request $request)
+    {
+        $dari = $request->dari ?? now()->startOfMonth()->format('Y-m-d');
+        $sampai = $request->sampai ?? now()->format('Y-m-d');
+
+        $data = BarangKeluar::with('barang', 'user')
+            ->whereBetween('tanggal', [$dari, $sampai])
+            ->orderBy('tanggal', 'desc')
+            ->get()
+            ->map(function ($k) {
+                return [
+                    'Tanggal' => $k->tanggal->format('d/m/Y'),
+                    'Kode' => $k->barang->kode ?? '-',
+                    'Barang' => $k->barang->nama ?? '-',
+                    'Jumlah' => $k->jumlah,
+                    'Harga Satuan' => $k->harga_satuan,
+                    'Total' => $k->total_harga,
+                    'Tujuan' => $k->tujuan ?? '-',
+                    'User' => $k->user->name ?? '-',
+                ];
+            });
+
+        return Excel::download(new \App\Exports\CollectionExport($data, 'Barang Keluar'), 'Barang_Keluar_' . $dari . '_' . $sampai . '.xlsx');
+    }
+
+    public function perputaranExcel()
+    {
+        $data = Barang::with('kategori')
+            ->where('is_active', true)
+            ->get()
+            ->map(function ($b) {
+                $masuk = $b->barangMasuks()->sum('jumlah');
+                $keluar = $b->barangKeluars()->sum('jumlah');
+                $avg = ($masuk + $b->stok) > 0 ? round($keluar / (($masuk + $b->stok) / 2), 2) : 0;
+                return [
+                    'Kode' => $b->kode,
+                    'Nama' => $b->nama,
+                    'Kategori' => $b->kategori->nama ?? '-',
+                    'Stok' => $b->stok,
+                    'Total Masuk' => $masuk,
+                    'Total Keluar' => $keluar,
+                    'Rasio Perputaran' => $avg,
+                ];
+            });
+
+        return Excel::download(new \App\Exports\CollectionExport($data, 'Perputaran Stok'), 'Perputaran_Stok_' . now()->format('Ymd') . '.xlsx');
+    }
+
+    // ============ PDF EXPORTS ============
+
+    public function stokPdf()
+    {
+        $barangs = Barang::with('kategori')->where('is_active', true)->orderBy('nama')->get();
+        $totalNilai = $barangs->sum('total_nilai');
+        $totalStok = $barangs->sum('stok');
+        $totalItem = $barangs->count();
+
+        $pdf = Pdf::loadView('exports.stok-pdf', compact('barangs', 'totalNilai', 'totalStok', 'totalItem'));
+        $pdf->setPaper('a4', 'landscape');
+        return $pdf->download('Laporan_Stok_' . now()->format('Ymd') . '.pdf');
+    }
+
+    public function transaksiPdf(Request $request)
+    {
+        $dari = $request->dari ?? now()->startOfMonth()->format('Y-m-d');
+        $sampai = $request->sampai ?? now()->format('Y-m-d');
+
+        $masuk = BarangMasuk::with('barang', 'user')->whereBetween('tanggal', [$dari, $sampai])->orderBy('tanggal', 'desc')->get();
+        $keluar = BarangKeluar::with('barang', 'user')->whereBetween('tanggal', [$dari, $sampai])->orderBy('tanggal', 'desc')->get();
+        $totalMasuk = $masuk->sum('total_harga');
+        $totalKeluar = $keluar->sum('total_harga');
+
+        $pdf = Pdf::loadView('exports.transaksi-pdf', compact('masuk', 'keluar', 'totalMasuk', 'totalKeluar', 'dari', 'sampai'));
+        $pdf->setPaper('a4', 'landscape');
+        return $pdf->download('Laporan_Transaksi_' . $dari . '_' . $sampai . '.pdf');
+    }
+
+    public function labaRugiPdf(Request $request)
+    {
+        $dari = $request->dari ?? now()->startOfMonth()->format('Y-m-d');
+        $sampai = $request->sampai ?? now()->format('Y-m-d');
+
+        $pendapatan = AkunKeuangan::where('tipe', 'pendapatan')->get()->map(function ($akun) use ($dari, $sampai) {
+            $akun->saldo_periode = JurnalEntry::where('akun_id', $akun->id)->whereBetween('tanggal', [$dari, $sampai])->sum('kredit')
+                                 - JurnalEntry::where('akun_id', $akun->id)->whereBetween('tanggal', [$dari, $sampai])->sum('debit');
+            return $akun;
+        });
+        $beban = AkunKeuangan::where('tipe', 'beban')->get()->map(function ($akun) use ($dari, $sampai) {
+            $akun->saldo_periode = JurnalEntry::where('akun_id', $akun->id)->whereBetween('tanggal', [$dari, $sampai])->sum('debit')
+                                 - JurnalEntry::where('akun_id', $akun->id)->whereBetween('tanggal', [$dari, $sampai])->sum('kredit');
+            return $akun;
+        });
+        $totalPendapatan = $pendapatan->sum('saldo_periode');
+        $totalBeban = $beban->sum('saldo_periode');
+        $labaRugi = $totalPendapatan - $totalBeban;
+
+        $pdf = Pdf::loadView('exports.laba-rugi-pdf', compact('pendapatan', 'beban', 'totalPendapatan', 'totalBeban', 'labaRugi', 'dari', 'sampai'));
+        return $pdf->download('Laba_Rugi_' . $dari . '_' . $sampai . '.pdf');
+    }
+
+    public function neracaPdf(Request $request)
+    {
+        $tanggal = $request->tanggal ?? now()->format('Y-m-d');
+
+        $aset = AkunKeuangan::where('tipe', 'aset')->get()->map(function ($akun) use ($tanggal) {
+            $akun->saldo_periode = JurnalEntry::where('akun_id', $akun->id)->where('tanggal', '<=', $tanggal)->sum('debit')
+                                 - JurnalEntry::where('akun_id', $akun->id)->where('tanggal', '<=', $tanggal)->sum('kredit');
+            return $akun;
+        });
+        $kewajiban = AkunKeuangan::where('tipe', 'kewajiban')->get()->map(function ($akun) use ($tanggal) {
+            $akun->saldo_periode = JurnalEntry::where('akun_id', $akun->id)->where('tanggal', '<=', $tanggal)->sum('kredit')
+                                 - JurnalEntry::where('akun_id', $akun->id)->where('tanggal', '<=', $tanggal)->sum('debit');
+            return $akun;
+        });
+        $ekuitas = AkunKeuangan::where('tipe', 'ekuitas')->get()->map(function ($akun) use ($tanggal) {
+            $akun->saldo_periode = JurnalEntry::where('akun_id', $akun->id)->where('tanggal', '<=', $tanggal)->sum('kredit')
+                                 - JurnalEntry::where('akun_id', $akun->id)->where('tanggal', '<=', $tanggal)->sum('debit');
+            return $akun;
+        });
+        $totalAset = $aset->sum('saldo_periode');
+        $totalKewajiban = $kewajiban->sum('saldo_periode');
+        $totalEkuitas = $ekuitas->sum('saldo_periode');
+
+        $pdf = Pdf::loadView('exports.neraca-pdf', compact('aset', 'kewajiban', 'ekuitas', 'totalAset', 'totalKewajiban', 'totalEkuitas', 'tanggal'));
+        return $pdf->download('Neraca_' . $tanggal . '.pdf');
+    }
+
+    public function jurnalPdf(Request $request)
+    {
+        $dari = $request->dari ?? now()->startOfMonth()->format('Y-m-d');
+        $sampai = $request->sampai ?? now()->format('Y-m-d');
+
+        $jurnals = JurnalEntry::with('akun')
+            ->whereBetween('tanggal', [$dari, $sampai])
+            ->orderBy('tanggal', 'desc')
+            ->get();
+
+        $totalDebit = $jurnals->sum('debit');
+        $totalKredit = $jurnals->sum('kredit');
+
+        $pdf = Pdf::loadView('exports.jurnal-pdf', compact('jurnals', 'totalDebit', 'totalKredit', 'dari', 'sampai'));
+        $pdf->setPaper('a4', 'landscape');
+        return $pdf->download('Jurnal_' . $dari . '_' . $sampai . '.pdf');
+    }
+
+    public function barangMasukPdf(Request $request)
+    {
+        $dari = $request->dari ?? now()->startOfMonth()->format('Y-m-d');
+        $sampai = $request->sampai ?? now()->format('Y-m-d');
+
+        $data = BarangMasuk::with('barang', 'user')
+            ->whereBetween('tanggal', [$dari, $sampai])
+            ->orderBy('tanggal', 'desc')
+            ->get();
+        $total = $data->sum('total_harga');
+
+        $pdf = Pdf::loadView('exports.barang-masuk-pdf', compact('data', 'total', 'dari', 'sampai'));
+        $pdf->setPaper('a4', 'landscape');
+        return $pdf->download('Barang_Masuk_' . $dari . '_' . $sampai . '.pdf');
+    }
+
+    public function barangKeluarPdf(Request $request)
+    {
+        $dari = $request->dari ?? now()->startOfMonth()->format('Y-m-d');
+        $sampai = $request->sampai ?? now()->format('Y-m-d');
+
+        $data = BarangKeluar::with('barang', 'user')
+            ->whereBetween('tanggal', [$dari, $sampai])
+            ->orderBy('tanggal', 'desc')
+            ->get();
+        $total = $data->sum('total_harga');
+
+        $pdf = Pdf::loadView('exports.barang-keluar-pdf', compact('data', 'total', 'dari', 'sampai'));
+        $pdf->setPaper('a4', 'landscape');
+        return $pdf->download('Barang_Keluar_' . $dari . '_' . $sampai . '.pdf');
+    }
+
+    public function perputaranPdf()
+    {
+        $barangs = Barang::with('kategori')->where('is_active', true)->get()->map(function ($b) {
+            $b->total_masuk = $b->barangMasuks()->sum('jumlah');
+            $b->total_keluar = $b->barangKeluars()->sum('jumlah');
+            $b->rasio = ($b->total_masuk + $b->stok) > 0 ? round($b->total_keluar / (($b->total_masuk + $b->stok) / 2), 2) : 0;
+            return $b;
+        });
+
+        $pdf = Pdf::loadView('exports.perputaran-pdf', compact('barangs'));
+        $pdf->setPaper('a4', 'landscape');
+        return $pdf->download('Perputaran_Stok_' . now()->format('Ymd') . '.pdf');
+    }
+
+    public function labaRugiExcel(Request $request)
+    {
+        $dari = $request->dari ?? now()->startOfMonth()->format('Y-m-d');
+        $sampai = $request->sampai ?? now()->format('Y-m-d');
+
+        $pendapatan = AkunKeuangan::where('tipe', 'pendapatan')->get()->map(function ($akun) use ($dari, $sampai) {
+            $akun->saldo_periode = JurnalEntry::where('akun_id', $akun->id)->whereBetween('tanggal', [$dari, $sampai])->sum('kredit')
+                                 - JurnalEntry::where('akun_id', $akun->id)->whereBetween('tanggal', [$dari, $sampai])->sum('debit');
+            return $akun;
+        });
+        $beban = AkunKeuangan::where('tipe', 'beban')->get()->map(function ($akun) use ($dari, $sampai) {
+            $akun->saldo_periode = JurnalEntry::where('akun_id', $akun->id)->whereBetween('tanggal', [$dari, $sampai])->sum('debit')
+                                 - JurnalEntry::where('akun_id', $akun->id)->whereBetween('tanggal', [$dari, $sampai])->sum('kredit');
+            return $akun;
+        });
+
+        $data = collect();
+        foreach ($pendapatan as $p) {
+            $data->push(['Tipe' => 'Pendapatan', 'Kode' => $p->kode, 'Nama Akun' => $p->nama, 'Saldo' => $p->saldo_periode]);
+        }
+        foreach ($beban as $b) {
+            $data->push(['Tipe' => 'Beban', 'Kode' => $b->kode, 'Nama Akun' => $b->nama, 'Saldo' => $b->saldo_periode]);
+        }
+
+        return Excel::download(new \App\Exports\CollectionExport($data, 'Laba Rugi'), 'Laba_Rugi_' . $dari . '_' . $sampai . '.xlsx');
+    }
+
+    public function neracaExcel(Request $request)
+    {
+        $tanggal = $request->tanggal ?? now()->format('Y-m-d');
+
+        $types = ['aset', 'kewajiban', 'ekuitas'];
+        $data = collect();
+
+        foreach ($types as $tipe) {
+            $akuns = AkunKeuangan::where('tipe', $tipe)->get();
+            foreach ($akuns as $akun) {
+                if (in_array($tipe, ['kewajiban', 'ekuitas'])) {
+                    $saldo = JurnalEntry::where('akun_id', $akun->id)->where('tanggal', '<=', $tanggal)->sum('kredit')
+                           - JurnalEntry::where('akun_id', $akun->id)->where('tanggal', '<=', $tanggal)->sum('debit');
+                } else {
+                    $saldo = JurnalEntry::where('akun_id', $akun->id)->where('tanggal', '<=', $tanggal)->sum('debit')
+                           - JurnalEntry::where('akun_id', $akun->id)->where('tanggal', '<=', $tanggal)->sum('kredit');
+                }
+                $data->push(['Tipe' => ucfirst($tipe), 'Kode' => $akun->kode, 'Nama Akun' => $akun->nama, 'Saldo' => $saldo]);
+            }
+        }
+
+        return Excel::download(new \App\Exports\CollectionExport($data, 'Neraca'), 'Neraca_' . $tanggal . '.xlsx');
+    }
+}
