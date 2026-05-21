@@ -4,8 +4,8 @@
 <div class="space-y-6">
     <div class="space-y-3">
         <div>
-            <h2 class="text-lg sm:text-xl font-bold">Inventory Turnover</h2>
-            <p class="text-xs sm:text-sm" style="color:var(--text-muted)">Perputaran stok bulan {{ now()->translatedFormat('F Y') }}</p>
+            <h2 class="text-lg sm:text-xl font-bold" data-lang="perputaran.heading">Inventory Turnover</h2>
+            <p class="text-xs sm:text-sm" style="color:var(--text-muted)"><span data-lang="perputaran.subtitle">Perputaran stok bulan</span> {{ now()->translatedFormat('F Y') }}</p>
         </div>
         <div class="flex items-center gap-1.5 flex-wrap">
             <a href="{{ route('export.perputaran.pdf') }}" class="btn-danger !text-[11px] !py-1.5 !px-2.5"><i class="fas fa-file-pdf"></i> PDF</a>

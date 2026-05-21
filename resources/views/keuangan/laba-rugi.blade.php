@@ -4,7 +4,7 @@
 <div class="space-y-6">
     <div class="space-y-3">
         <div>
-            <h2 class="text-lg sm:text-xl font-bold">Laporan Laba Rugi</h2>
+            <h2 class="text-lg sm:text-xl font-bold" data-lang="labarugi.title">Laporan Laba Rugi</h2>
             <p class="text-xs sm:text-sm" style="color:var(--text-muted)">{{ \Carbon\Carbon::parse($dari)->translatedFormat('d M Y') }} — {{ \Carbon\Carbon::parse($sampai)->translatedFormat('d M Y') }}</p>
         </div>
         <div class="flex flex-col sm:flex-row sm:items-center gap-2">

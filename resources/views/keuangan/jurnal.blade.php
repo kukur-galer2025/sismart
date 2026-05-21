@@ -4,15 +4,15 @@
 <div class="space-y-6">
     <div class="space-y-3">
         <div>
-            <h2 class="text-lg sm:text-xl font-bold">Jurnal Umum</h2>
-            <p class="text-xs sm:text-sm" style="color:var(--text-muted)">Catatan seluruh transaksi keuangan persediaan</p>
+            <h2 class="text-lg sm:text-xl font-bold" data-lang="jurnal.title">Jurnal Umum</h2>
+            <p class="text-xs sm:text-sm" style="color:var(--text-muted)" data-lang="jurnal.subtitle">Catatan seluruh transaksi keuangan persediaan</p>
         </div>
         <div class="flex flex-col sm:flex-row sm:items-center gap-2">
             <form method="GET" action="{{ route('keuangan.jurnal') }}" class="flex items-center gap-1.5 flex-wrap">
                 <input type="date" name="dari" value="{{ request('dari') }}" class="form-input !w-[120px] !py-1.5 !text-[11px]">
-                <span class="text-[10px]" style="color:var(--text-muted)">s/d</span>
+                <span class="text-[10px]" style="color:var(--text-muted)" data-lang="common.sd">s/d</span>
                 <input type="date" name="sampai" value="{{ request('sampai') }}" class="form-input !w-[120px] !py-1.5 !text-[11px]">
-                <button type="submit" class="btn-primary !text-[11px] !py-1.5 !px-2.5"><i class="fas fa-filter"></i> Filter</button>
+                <button type="submit" class="btn-primary !text-[11px] !py-1.5 !px-2.5"><i class="fas fa-filter"></i> <span data-lang="common.filter">Filter</span></button>
             </form>
             <div class="flex items-center gap-1.5">
                 <a href="{{ route('export.jurnal.pdf', ['dari'=>request('dari',now()->startOfMonth()->format('Y-m-d')),'sampai'=>request('sampai',now()->format('Y-m-d'))]) }}" class="btn-danger !text-[11px] !py-1.5 !px-2.5"><i class="fas fa-file-pdf"></i> PDF</a>

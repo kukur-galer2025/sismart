@@ -4,15 +4,15 @@
 <div class="space-y-6">
     <div class="space-y-3">
         <div>
-            <h2 class="text-lg sm:text-xl font-bold">Laporan Transaksi</h2>
+            <h2 class="text-lg sm:text-xl font-bold" data-lang="lap_trx.heading">Laporan Transaksi</h2>
             <p class="text-xs sm:text-sm" style="color:var(--text-muted)">{{ \Carbon\Carbon::parse($dari)->translatedFormat('d M Y') }} — {{ \Carbon\Carbon::parse($sampai)->translatedFormat('d M Y') }}</p>
         </div>
         <div class="flex flex-col sm:flex-row sm:items-center gap-2">
             <form method="GET" action="{{ route('laporan.transaksi') }}" class="flex items-center gap-1.5 flex-wrap">
                 <input type="date" name="dari" value="{{ $dari }}" class="form-input !w-[120px] !py-1.5 !text-[11px]">
-                <span class="text-[10px]" style="color:var(--text-muted)">s/d</span>
+                <span class="text-[10px]" style="color:var(--text-muted)" data-lang="common.sd">s/d</span>
                 <input type="date" name="sampai" value="{{ $sampai }}" class="form-input !w-[120px] !py-1.5 !text-[11px]">
-                <button type="submit" class="btn-primary !text-[11px] !py-1.5 !px-2.5"><i class="fas fa-filter"></i> Filter</button>
+                <button type="submit" class="btn-primary !text-[11px] !py-1.5 !px-2.5"><i class="fas fa-filter"></i> <span data-lang="common.filter">Filter</span></button>
             </form>
             <div class="flex items-center gap-1.5">
                 <a href="{{ route('export.transaksi.pdf', ['dari'=>$dari,'sampai'=>$sampai]) }}" class="btn-danger !text-[11px] !py-1.5 !px-2.5"><i class="fas fa-file-pdf"></i> PDF</a>
@@ -22,12 +22,17 @@
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        @foreach([['Total Masuk','emerald','arrow-down',$totalMasuk,$masuk->count()],['Total Keluar','rose','arrow-up',$totalKeluar,$keluar->count()],['Selisih','indigo','chart-bar',$totalMasuk-$totalKeluar,null]] as [$lbl,$clr,$ico,$val,$cnt])
+        @php $statItems = [
+            ['lap_trx.total_masuk','Total Masuk','emerald','arrow-down',$totalMasuk,$masuk->count()],
+            ['lap_trx.total_keluar','Total Keluar','rose','arrow-up',$totalKeluar,$keluar->count()],
+            ['lap_trx.selisih','Selisih','indigo','chart-bar',$totalMasuk-$totalKeluar,null]
+        ]; @endphp
+        @foreach($statItems as [$langKey,$lbl,$clr,$ico,$val,$cnt])
         <div class="glass p-4 rounded-2xl stat-card border-l-4 border-{{ $clr }}-500">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style="background:rgba({{ $clr==='emerald'?'16,185,129':($clr==='rose'?'239,68,68':'99,102,241') }},0.12)"><i class="fas fa-{{ $ico }} text-{{ $clr }}-500"></i></div>
                 <div>
-                    <p class="text-xs" style="color:var(--text-muted)">{{ $lbl }}</p>
+                    <p class="text-xs" style="color:var(--text-muted)" data-lang="{{ $langKey }}">{{ $lbl }}</p>
                     <p class="text-lg font-bold {{ $lbl==='Selisih'&&$val<0?'text-rose-600 dark:text-rose-400':'text-'.$clr.'-600 dark:text-'.$clr.'-400' }}">Rp {{ number_format($val,0,',','.') }}</p>
                     @if($cnt!==null)<p class="text-[10px]" style="color:var(--text-muted)">{{ $cnt }} transaksi</p>@endif
                 </div>

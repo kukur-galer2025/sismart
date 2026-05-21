@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html lang="id" x-data="{ darkMode: localStorage.getItem('sismart-theme')==='dark'||(!localStorage.getItem('sismart-theme')&&window.matchMedia('(prefers-color-scheme:dark)').matches), toggle(){ this.darkMode=!this.darkMode; localStorage.setItem('sismart-theme',this.darkMode?'dark':'light'); } }" :class="{ 'dark': darkMode }">
+<html lang="id" x-data="{ darkMode: localStorage.getItem('sismart-theme')==='dark'||(!localStorage.getItem('sismart-theme')&&window.matchMedia('(prefers-color-scheme:dark)').matches), toggle(){ this.darkMode=!this.darkMode; localStorage.setItem('sismart-theme',this.darkMode?'dark':'light'); }, lang: localStorage.getItem('sismart-lang')||'id', switchLang(){ this.lang=this.lang==='id'?'en':'id'; localStorage.setItem('sismart-lang',this.lang); applyLang(this.lang); fetch('/set-lang/'+this.lang,{method:'POST',headers:{'X-CSRF-TOKEN':document.querySelector('meta[name=csrf-token]').content,'Accept':'application/json'}}).catch(()=>{}); } }" :class="{ 'dark': darkMode }" x-init="$nextTick(()=>applyLang(lang))">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Login — SISmart</title>
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="{{ asset('js/lang.js') }}"></script>
     @vite(['resources/css/app.css','resources/js/app.js'])
     <style>
         [x-cloak]{display:none!important}
@@ -110,6 +112,17 @@
         .theme-btn:hover{background:rgba(99,102,241,.15);transform:scale(1.05)}
         .dark .theme-btn{background:rgba(255,255,255,.06);color:#fbbf24;border:1px solid rgba(255,255,255,.08)}
 
+        .lang-btn{
+            position:absolute;top:1.25rem;right:4.5rem;z-index:50;
+            height:42px;border-radius:12px;border:none;cursor:pointer;
+            display:flex;align-items:center;justify-content:center;gap:6px;
+            padding:0 12px;font-size:12px;font-weight:700;
+            transition:all .2s;
+        }
+        .lang-btn{background:rgba(99,102,241,.08);color:#6366f1}
+        .lang-btn:hover{background:rgba(99,102,241,.15);transform:scale(1.05)}
+        .dark .lang-btn{background:rgba(255,255,255,.06);color:#a5b4fc;border:1px solid rgba(255,255,255,.08)}
+
         @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
         .fade-up{animation:fadeUp .5s ease-out}
 
@@ -134,21 +147,21 @@
                     <i class="fas fa-boxes-stacked" style="font-size:30px;color:#fff"></i>
                 </div>
                 <h2>Smart Inventory<br>System</h2>
-                <p>Kelola persediaan barang dengan cerdas.<br>Pantau stok, transaksi, dan keuangan dalam satu platform terintegrasi.</p>
+                <p><span data-lang="login.kelola">Kelola persediaan barang dengan cerdas.</span><br><span data-lang="login.kelola2">Pantau stok, transaksi, dan keuangan dalam satu platform terintegrasi.</span></p>
             </div>
 
             <div class="feature-grid">
                 <div class="feature-card">
                     <i class="fas fa-warehouse text-indigo-200"></i>
-                    <span>Inventori</span>
+                    <span data-lang="login.inventori">Inventori</span>
                 </div>
                 <div class="feature-card">
                     <i class="fas fa-chart-line text-cyan-200"></i>
-                    <span>Analisis</span>
+                    <span data-lang="login.analisis">Analisis</span>
                 </div>
                 <div class="feature-card">
                     <i class="fas fa-coins text-amber-200"></i>
-                    <span>Keuangan</span>
+                    <span data-lang="login.keuangan">Keuangan</span>
                 </div>
             </div>
 
@@ -158,6 +171,12 @@
 
     <!-- ══════════ RIGHT — FORM ══════════ -->
     <div class="right-panel safe-b">
+        {{-- Language Toggle --}}
+        <button @click="switchLang()" class="lang-btn" :title="lang === 'id' ? 'Switch to English' : 'Ganti ke Bahasa Indonesia'">
+            <i class="fas fa-globe"></i>
+            <span x-text="lang === 'id' ? 'EN' : 'ID'"></span>
+        </button>
+
         <button @click="toggle()" class="theme-btn">
             <i x-show="darkMode" class="fas fa-sun" x-transition></i>
             <i x-show="!darkMode" class="fas fa-moon" x-transition x-cloak></i>
@@ -178,9 +197,9 @@
             <!-- Desktop title -->
             <div class="hidden lg:block" style="margin-bottom:2.5rem">
                 <h1 style="font-size:26px;font-weight:800;letter-spacing:-.5px">
-                    <span style="background:linear-gradient(135deg,#6366f1,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Selamat Datang</span>
+                    <span style="background:linear-gradient(135deg,#6366f1,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent" data-lang="login.selamat_datang">Selamat Datang</span>
                 </h1>
-                <p class="sub-text" style="font-size:14px;margin-top:6px">Masuk ke akun Anda untuk melanjutkan</p>
+                <p class="sub-text" style="font-size:14px;margin-top:6px" data-lang="login.subtitle">Masuk ke akun Anda untuk melanjutkan</p>
             </div>
 
             <!-- Error -->
@@ -195,12 +214,12 @@
                 @csrf
 
                 <div style="margin-bottom:1.25rem">
-                    <label class="f-label"><i class="fas fa-envelope"></i> Email</label>
+                    <label class="f-label"><i class="fas fa-envelope"></i> <span data-lang="login.email">Email</span></label>
                     <input type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="email" placeholder="nama@perusahaan.com" class="f-input">
                 </div>
 
                 <div style="margin-bottom:1.25rem" x-data="{show:false}">
-                    <label class="f-label"><i class="fas fa-lock"></i> Password</label>
+                    <label class="f-label"><i class="fas fa-lock"></i> <span data-lang="login.password">Password</span></label>
                     <div style="position:relative">
                         <input :type="show?'text':'password'" name="password" required autocomplete="current-password" placeholder="••••••••" class="f-input" style="padding-right:48px">
                         <button type="button" @click="show=!show" class="eye-btn" tabindex="-1">
@@ -211,11 +230,11 @@
 
                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:1.75rem">
                     <input type="checkbox" name="remember" id="remember" style="width:16px;height:16px;accent-color:#6366f1;cursor:pointer">
-                    <label for="remember" class="cb-text" style="cursor:pointer;user-select:none">Ingat saya di perangkat ini</label>
+                    <label for="remember" class="cb-text" style="cursor:pointer;user-select:none" data-lang="login.ingat_saya">Ingat saya di perangkat ini</label>
                 </div>
 
                 <button type="submit" class="submit-btn">
-                    <i class="fas fa-right-to-bracket"></i> Masuk Sistem
+                    <i class="fas fa-right-to-bracket"></i> <span data-lang="login.masuk">Masuk Sistem</span>
                 </button>
             </form>
 

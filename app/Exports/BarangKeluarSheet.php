@@ -32,7 +32,7 @@ class BarangKeluarSheet implements FromCollection, WithHeadings, WithMapping, Wi
 
     public function headings(): array
     {
-        return ['No', 'Tanggal', 'Kode Transaksi', 'Nama Barang', 'Kode Barang', 'Tujuan', 'Jumlah', 'Satuan', 'Harga HPP (Rp)', 'Total HPP (Rp)', 'Petugas'];
+        return [__('export.no'), __('export.tanggal'), __('export.excel.kode_transaksi'), __('export.excel.nama_barang'), __('export.excel.kode_barang_col'), __('export.tujuan'), __('export.jumlah'), __('export.satuan'), __('export.excel.harga_hpp'), __('export.excel.total_hpp'), __('export.excel.petugas')];
     }
 
     public function map($k): array
@@ -50,9 +50,9 @@ class BarangKeluarSheet implements FromCollection, WithHeadings, WithMapping, Wi
         $lastRow = $this->row + 1;
         $sheet->insertNewRowBefore(1, 3);
         $sheet->mergeCells('A1:K1');
-        $sheet->setCellValue('A1', 'LAPORAN BARANG KELUAR - SISmart');
+        $sheet->setCellValue('A1', __('export.excel.keluar_title'));
         $sheet->mergeCells('A2:K2');
-        $sheet->setCellValue('A2', "Periode: {$this->dari} s/d {$this->sampai}");
+        $sheet->setCellValue('A2', __('export.periode') . ": {$this->dari} " . __('export.sd') . " {$this->sampai}");
         $sheet->mergeCells('A3:K3');
 
         $lastDataRow = $lastRow + 3;
@@ -72,5 +72,5 @@ class BarangKeluarSheet implements FromCollection, WithHeadings, WithMapping, Wi
         ];
     }
 
-    public function title(): string { return 'Barang Keluar'; }
+    public function title(): string { return __('export.excel.keluar_sheet'); }
 }

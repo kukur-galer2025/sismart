@@ -12,6 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="{{ asset('js/lang.js') }}"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         [x-cloak] { display: none !important; }
@@ -107,6 +108,10 @@
         @media (max-width: 640px) {
             .glass { border-radius: 1rem; }
         }
+
+        /* Language toggle styles */
+        .lang-toggle { transition: all 0.3s ease; }
+        .lang-toggle-dot { transition: transform 0.3s ease; }
     </style>
 </head>
 <body class="min-h-screen transition-colors duration-300" style="background:var(--bg-body); color:var(--text-primary);"
@@ -128,7 +133,7 @@
                     </div>
                     <div x-show="sidebarOpen || mobileMenu" x-transition class="overflow-hidden min-w-0">
                         <h1 class="text-lg font-bold gradient-text leading-tight">SISmart</h1>
-                        <p class="text-[10px] -mt-0.5" style="color:var(--text-muted)">Smart Inventory</p>
+                        <p class="text-[10px] -mt-0.5" style="color:var(--text-muted)" data-lang="nav.smart_inventory">Smart Inventory</p>
                     </div>
                 </div>
                 <button @click="mobileMenu = false" class="ml-auto lg:hidden p-2" style="color:var(--text-muted)"><i class="fas fa-times"></i></button>
@@ -137,39 +142,39 @@
             <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
                 @php
                     $nav = [
-                        ['Menu Utama', [
-                            ['dashboard', 'fas fa-th-large', 'Dashboard', 'dashboard'],
+                        ['nav.menu_utama', 'Menu Utama', [
+                            ['dashboard', 'fas fa-th-large', 'nav.dashboard', 'Dashboard', 'dashboard'],
                         ]],
-                        ['Master Data', [
-                            ['kategori.*', 'fas fa-tags', 'Kategori', 'kategori.index'],
-                            ['barang.*', 'fas fa-cubes', 'Data Barang', 'barang.index'],
+                        ['nav.master_data', 'Master Data', [
+                            ['kategori.*', 'fas fa-tags', 'nav.kategori', 'Kategori', 'kategori.index'],
+                            ['barang.*', 'fas fa-cubes', 'nav.data_barang', 'Data Barang', 'barang.index'],
                         ]],
-                        ['Transaksi', [
-                            ['barang-masuk.*', 'fas fa-arrow-down text-emerald-500', 'Barang Masuk', 'barang-masuk.index'],
-                            ['barang-keluar.*', 'fas fa-arrow-up text-rose-500', 'Barang Keluar', 'barang-keluar.index'],
+                        ['nav.transaksi', 'Transaksi', [
+                            ['barang-masuk.*', 'fas fa-arrow-down text-emerald-500', 'nav.barang_masuk', 'Barang Masuk', 'barang-masuk.index'],
+                            ['barang-keluar.*', 'fas fa-arrow-up text-rose-500', 'nav.barang_keluar', 'Barang Keluar', 'barang-keluar.index'],
                         ]],
-                        ['Laporan', [
-                            ['laporan.stok', 'fas fa-warehouse', 'Laporan Stok', 'laporan.stok'],
-                            ['laporan.transaksi', 'fas fa-exchange-alt', 'Laporan Transaksi', 'laporan.transaksi'],
-                            ['laporan.perputaran', 'fas fa-sync-alt', 'Perputaran Stok', 'laporan.perputaran'],
+                        ['nav.laporan', 'Laporan', [
+                            ['laporan.stok', 'fas fa-warehouse', 'nav.laporan_stok', 'Laporan Stok', 'laporan.stok'],
+                            ['laporan.transaksi', 'fas fa-exchange-alt', 'nav.laporan_transaksi', 'Laporan Transaksi', 'laporan.transaksi'],
+                            ['laporan.perputaran', 'fas fa-sync-alt', 'nav.perputaran_stok', 'Perputaran Stok', 'laporan.perputaran'],
                         ]],
-                        ['Keuangan', [
-                            ['keuangan.jurnal', 'fas fa-book', 'Jurnal Umum', 'keuangan.jurnal'],
-                            ['keuangan.laba-rugi', 'fas fa-chart-line', 'Laba Rugi', 'keuangan.laba-rugi'],
-                            ['keuangan.neraca', 'fas fa-balance-scale', 'Neraca', 'keuangan.neraca'],
+                        ['nav.keuangan', 'Keuangan', [
+                            ['keuangan.jurnal', 'fas fa-book', 'nav.jurnal_umum', 'Jurnal Umum', 'keuangan.jurnal'],
+                            ['keuangan.laba-rugi', 'fas fa-chart-line', 'nav.laba_rugi', 'Laba Rugi', 'keuangan.laba-rugi'],
+                            ['keuangan.neraca', 'fas fa-balance-scale', 'nav.neraca', 'Neraca', 'keuangan.neraca'],
                         ]],
-                        ['Bantuan', [
-                            ['manual-book', 'fas fa-book-reader', 'Manual Book', 'manual-book'],
-                            ['tentang-kami', 'fas fa-users', 'Tentang Kami', 'tentang-kami'],
+                        ['nav.bantuan', 'Bantuan', [
+                            ['manual-book', 'fas fa-book-reader', 'nav.manual_book', 'Manual Book', 'manual-book'],
+                            ['tentang-kami', 'fas fa-users', 'nav.tentang_kami', 'Tentang Kami', 'tentang-kami'],
                         ]],
                     ];
                 @endphp
-                @foreach($nav as [$label, $items])
-                    <p class="px-3 text-[10px] uppercase tracking-widest mb-2 {{ !$loop->first ? 'mt-5' : '' }}" style="color:var(--text-muted)" x-show="sidebarOpen || mobileMenu">{{ $label }}</p>
-                    @foreach($items as [$route, $icon, $text, $href])
+                @foreach($nav as [$labelKey, $labelFallback, $items])
+                    <p class="px-3 text-[10px] uppercase tracking-widest mb-2 {{ !$loop->first ? 'mt-5' : '' }}" style="color:var(--text-muted)" x-show="sidebarOpen || mobileMenu" data-lang="{{ $labelKey }}">{{ $labelFallback }}</p>
+                    @foreach($items as [$route, $icon, $textKey, $textFallback, $href])
                         <a href="{{ route($href) }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all {{ request()->routeIs($route) ? 'active' : '' }}" style="{{ !request()->routeIs($route) ? 'color:var(--text-secondary)' : '' }}">
                             <i class="{{ $icon }} w-5 text-center"></i>
-                            <span x-show="sidebarOpen || mobileMenu">{{ $text }}</span>
+                            <span x-show="sidebarOpen || mobileMenu" data-lang="{{ $textKey }}">{{ $textFallback }}</span>
                         </a>
                     @endforeach
                 @endforeach
@@ -180,12 +185,12 @@
                     <div class="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-sm font-bold text-white shrink-0">{{ substr(auth()->user()->name, 0, 1) }}</div>
                     <div x-show="sidebarOpen || mobileMenu" class="flex-1 min-w-0">
                         <p class="text-sm font-medium truncate">{{ auth()->user()->name }}</p>
-                        <p class="text-[10px]" style="color:var(--text-muted)">Administrator</p>
+                        <p class="text-[10px]" style="color:var(--text-muted)" data-lang="nav.administrator">Administrator</p>
                     </div>
                     <form method="POST" action="{{ route('logout') }}" x-show="sidebarOpen || mobileMenu">@csrf
                         <button type="submit" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-all duration-200 hover:bg-rose-500/15 hover:text-rose-500 group" style="color:var(--text-muted)" title="Logout">
                             <i class="fas fa-sign-out-alt transition-transform duration-200 group-hover:translate-x-0.5"></i>
-                            <span class="text-xs font-medium">Keluar</span>
+                            <span class="text-xs font-medium" data-lang="nav.keluar">Keluar</span>
                         </button>
                     </form>
                 </div>
@@ -203,11 +208,20 @@
                 <div class="flex items-center gap-1.5 sm:gap-2">
                     {{-- Quick Search --}}
                     <button @click="$dispatch('open-search')" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs border transition-colors" style="color:var(--text-muted); border-color:var(--border-color)" title="Ctrl+K">
-                        <i class="fas fa-search"></i> <span>Cari...</span> <kbd class="ml-1 px-1.5 py-0.5 rounded text-[10px] border" style="border-color:var(--border-color)">⌘K</kbd>
+                        <i class="fas fa-search"></i> <span data-lang="header.cari">Cari...</span> <kbd class="ml-1 px-1.5 py-0.5 rounded text-[10px] border" style="border-color:var(--border-color)">⌘K</kbd>
+                    </button>
+
+                    {{-- Language Toggle --}}
+                    <button @click="switchLang()" class="relative flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-xl transition-all hover:bg-indigo-500/10 lang-toggle" :title="lang === 'id' ? 'Switch to English' : 'Ganti ke Bahasa Indonesia'">
+                        <span class="text-[10px] sm:text-xs font-bold transition-all duration-300" :class="lang === 'id' ? 'text-indigo-600 dark:text-indigo-400' : 'opacity-30'" style="line-height:1">ID</span>
+                        <div class="w-7 sm:w-8 h-3.5 sm:h-4 rounded-full relative transition-colors duration-300" :class="lang === 'en' ? 'bg-indigo-500' : 'bg-gray-300 dark:bg-gray-600'">
+                            <div class="w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full bg-white shadow-sm absolute top-0.5 transition-transform duration-300 lang-toggle-dot" :class="lang === 'en' ? 'translate-x-3.5 sm:translate-x-4' : 'translate-x-0.5'"></div>
+                        </div>
+                        <span class="text-[10px] sm:text-xs font-bold transition-all duration-300" :class="lang === 'en' ? 'text-indigo-600 dark:text-indigo-400' : 'opacity-30'" style="line-height:1">EN</span>
                     </button>
 
                     {{-- Theme Toggle --}}
-                    <button @click="toggleTheme()" class="relative w-10 h-10 flex items-center justify-center rounded-xl transition-all hover:bg-indigo-500/10" title="Ganti Tema">
+                    <button @click="toggleTheme()" class="relative w-10 h-10 flex items-center justify-center rounded-xl transition-all hover:bg-indigo-500/10" data-lang-title="header.ganti_tema" title="Ganti Tema">
                         <i x-show="darkMode" class="fas fa-sun text-amber-400 text-lg" x-transition></i>
                         <i x-show="!darkMode" class="fas fa-moon text-indigo-600 text-lg" x-transition x-cloak></i>
                     </button>
@@ -253,16 +267,17 @@
         <div x-show="open" x-transition.scale.origin.top class="relative w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden" style="background:var(--bg-sidebar); border:1px solid var(--border-color);">
             <div class="flex items-center gap-3 px-5 py-4 border-b" style="border-color:var(--border-color)">
                 <i class="fas fa-search text-indigo-500"></i>
-                <input type="text" placeholder="Cari halaman, barang, laporan..." class="flex-1 bg-transparent outline-none text-sm" style="color:var(--text-primary)" autofocus
+                <input type="text" class="flex-1 bg-transparent outline-none text-sm" style="color:var(--text-primary)" autofocus
+                    data-lang-placeholder="search.placeholder" placeholder="Cari halaman, barang, laporan..."
                     x-ref="searchInput" @keydown.enter="
                         let q = $refs.searchInput.value.toLowerCase();
-                        let routes = {dashboard:'{{ route("dashboard") }}',barang:'{{ route("barang.index") }}',kategori:'{{ route("kategori.index") }}',masuk:'{{ route("barang-masuk.index") }}',keluar:'{{ route("barang-keluar.index") }}',stok:'{{ route("laporan.stok") }}',transaksi:'{{ route("laporan.transaksi") }}',perputaran:'{{ route("laporan.perputaran") }}',jurnal:'{{ route("keuangan.jurnal") }}','laba rugi':'{{ route("keuangan.laba-rugi") }}',neraca:'{{ route("keuangan.neraca") }}'};
+                        let routes = {dashboard:'{{ route("dashboard") }}',barang:'{{ route("barang.index") }}',kategori:'{{ route("kategori.index") }}',masuk:'{{ route("barang-masuk.index") }}',keluar:'{{ route("barang-keluar.index") }}',stok:'{{ route("laporan.stok") }}',transaksi:'{{ route("laporan.transaksi") }}',perputaran:'{{ route("laporan.perputaran") }}',jurnal:'{{ route("keuangan.jurnal") }}','laba rugi':'{{ route("keuangan.laba-rugi") }}',neraca:'{{ route("keuangan.neraca") }}',items:'{{ route("barang.index") }}',categories:'{{ route("kategori.index") }}',stock:'{{ route("laporan.stok") }}',journal:'{{ route("keuangan.jurnal") }}',income:'{{ route("keuangan.laba-rugi") }}',balance:'{{ route("keuangan.neraca") }}'};
                         for(let [k,v] of Object.entries(routes)) { if(k.includes(q)) { window.location.href=v; break; } }
                     ">
                 <kbd class="px-2 py-1 rounded text-[10px] border" style="color:var(--text-muted); border-color:var(--border-color)">ESC</kbd>
             </div>
             <div class="p-3 text-xs" style="color:var(--text-muted)">
-                <p><i class="fas fa-lightbulb text-amber-500 mr-1"></i> Ketik nama halaman lalu Enter. Contoh: "barang", "jurnal", "neraca"</p>
+                <p><i class="fas fa-lightbulb text-amber-500 mr-1"></i> <span data-lang="search.hint">Ketik nama halaman lalu Enter. Contoh: "barang", "jurnal", "neraca"</span></p>
             </div>
         </div>
     </div>
@@ -272,29 +287,30 @@
         <div x-show="open" x-transition.opacity class="fixed inset-0 bg-black/40 backdrop-blur-sm" @click="open=false"></div>
         <div x-show="open" x-transition.scale class="relative w-full max-w-md rounded-2xl shadow-2xl overflow-hidden" style="background:var(--bg-sidebar);border:1px solid var(--border-color)">
             <div class="flex items-center justify-between px-5 py-4 border-b" style="border-color:var(--border-color)">
-                <h3 class="text-sm font-bold flex items-center gap-2" style="color:var(--text-primary)"><i class="fas fa-keyboard text-indigo-500"></i> Pintasan Keyboard</h3>
+                <h3 class="text-sm font-bold flex items-center gap-2" style="color:var(--text-primary)"><i class="fas fa-keyboard text-indigo-500"></i> <span data-lang="shortcut.title">Pintasan Keyboard</span></h3>
                 <button @click="open=false" class="text-sm" style="color:var(--text-muted)"><i class="fas fa-times"></i></button>
             </div>
             <div class="p-5 space-y-3 text-sm">
                 @foreach([
-                    ['Ctrl + K','Pencarian cepat','fa-search'],
-                    ['?','Pintasan keyboard','fa-keyboard'],
-                    ['Esc','Tutup modal','fa-times-circle'],
+                    ['Ctrl + K','shortcut.search','Pencarian cepat','fa-search'],
+                    ['?','shortcut.keyboard','Pintasan keyboard','fa-keyboard'],
+                    ['Esc','shortcut.close','Tutup modal','fa-times-circle'],
                 ] as $s)
                 <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2" style="color:var(--text-secondary)"><i class="fas {{ $s[2] }} text-xs text-indigo-400 w-4"></i> {{ $s[1] }}</span>
+                    <span class="flex items-center gap-2" style="color:var(--text-secondary)"><i class="fas {{ $s[3] }} text-xs text-indigo-400 w-4"></i> <span data-lang="{{ $s[1] }}">{{ $s[2] }}</span></span>
                     <kbd class="px-2.5 py-1 rounded-lg text-[11px] font-mono font-semibold" style="color:var(--text-muted);background:var(--bg-input);border:1px solid var(--border-color)">{{ $s[0] }}</kbd>
                 </div>
                 @endforeach
             </div>
             <div class="px-5 py-3 border-t text-[11px]" style="border-color:var(--border-color);color:var(--text-muted)">
-                <i class="fas fa-lightbulb text-amber-500 mr-1"></i> Tekan <kbd class="px-1.5 py-0.5 rounded text-[10px] font-mono" style="background:var(--bg-input);border:1px solid var(--border-color)">?</kbd> kapan saja untuk melihat pintasan ini
+                <i class="fas fa-lightbulb text-amber-500 mr-1"></i> <span data-lang="shortcut.hint">Tekan</span> <kbd class="px-1.5 py-0.5 rounded text-[10px] font-mono" style="background:var(--bg-input);border:1px solid var(--border-color)">?</kbd> <span data-lang="shortcut.hint2">kapan saja untuk melihat pintasan ini</span>
             </div>
         </div>
     </div>
     {{-- Global Delete Confirmation Modal --}}
-    <div x-data="{ open: false, form: null, message: 'Apakah Anda yakin ingin menghapus data ini?' }"
-         @open-delete-modal.window="open = true; form = $event.detail.form; message = $event.detail.message || message"
+    <div x-data="{ open: false, form: null, message: '' }"
+         x-init="message = t('delete.message', lang)"
+         @open-delete-modal.window="open = true; form = $event.detail.form; message = $event.detail.message || t('delete.message', lang)"
          @keydown.escape.window="open = false"
          class="relative z-[100] no-print" x-cloak>
         <div x-show="open" x-transition.opacity class="fixed inset-0 bg-black/60 backdrop-blur-sm"></div>
@@ -303,11 +319,11 @@
                 <div class="w-16 h-16 rounded-full bg-rose-500/10 text-rose-500 flex items-center justify-center mx-auto mb-4">
                     <i class="fas fa-trash-alt text-2xl"></i>
                 </div>
-                <h3 class="text-lg font-bold mb-2" style="color:var(--text-primary)">Konfirmasi Hapus</h3>
+                <h3 class="text-lg font-bold mb-2" style="color:var(--text-primary)" data-lang="delete.title">Konfirmasi Hapus</h3>
                 <p class="text-sm mb-6" style="color:var(--text-secondary)" x-text="message"></p>
                 <div class="flex flex-col sm:flex-row gap-3 justify-center">
-                    <button @click="open = false" type="button" class="w-full sm:w-auto px-5 py-2.5 rounded-xl text-sm font-medium transition-colors hover:opacity-80" style="background:var(--bg-input);color:var(--text-primary);border:1px solid var(--border-color)">Batal</button>
-                    <button @click="form.submit()" type="button" class="w-full sm:w-auto px-5 py-2.5 rounded-xl text-sm font-medium bg-rose-500 text-white shadow-lg shadow-rose-500/30 hover:bg-rose-600 transition-colors">Ya, Hapus!</button>
+                    <button @click="open = false" type="button" class="w-full sm:w-auto px-5 py-2.5 rounded-xl text-sm font-medium transition-colors hover:opacity-80" style="background:var(--bg-input);color:var(--text-primary);border:1px solid var(--border-color)" data-lang="delete.cancel">Batal</button>
+                    <button @click="form.submit()" type="button" class="w-full sm:w-auto px-5 py-2.5 rounded-xl text-sm font-medium bg-rose-500 text-white shadow-lg shadow-rose-500/30 hover:bg-rose-600 transition-colors" data-lang="delete.confirm">Ya, Hapus!</button>
                 </div>
             </div>
         </div>
@@ -319,8 +335,26 @@
         function themeManager() {
             return {
                 darkMode: localStorage.getItem('sismart-theme') === 'dark' || (!localStorage.getItem('sismart-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches),
-                init() { this.$watch('darkMode', val => localStorage.setItem('sismart-theme', val ? 'dark' : 'light')); },
-                toggleTheme() { this.darkMode = !this.darkMode; }
+                lang: localStorage.getItem('sismart-lang') || 'id',
+                init() {
+                    this.$watch('darkMode', val => localStorage.setItem('sismart-theme', val ? 'dark' : 'light'));
+                    // Apply language on load
+                    this.$nextTick(() => applyLang(this.lang));
+                },
+                toggleTheme() { this.darkMode = !this.darkMode; },
+                switchLang() {
+                    this.lang = this.lang === 'id' ? 'en' : 'id';
+                    localStorage.setItem('sismart-lang', this.lang);
+                    applyLang(this.lang);
+                    // Sync to backend session for PDF/Excel exports
+                    fetch('/set-lang/' + this.lang, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json'
+                        }
+                    }).catch(() => {});
+                }
             }
         }
     </script>

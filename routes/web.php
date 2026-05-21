@@ -11,6 +11,12 @@ use App\Http\Controllers\KeuanganController;
 use App\Http\Controllers\LaporanController;
 use Illuminate\Support\Facades\Route;
 
+// Language Switch
+Route::post('/set-lang/{lang}', function ($lang) {
+    session(['sismart-lang' => in_array($lang, ['id', 'en']) ? $lang : 'id']);
+    return response()->json(['ok' => true]);
+})->name('set-lang');
+
 // Auth Routes
 Route::get('/', fn() => redirect()->route('login'));
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

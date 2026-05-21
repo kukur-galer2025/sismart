@@ -45,15 +45,15 @@ class ExportController extends Controller
         // Simple CSV-style Excel via collection export
         $data = $jurnals->map(function ($j) {
             return [
-                'Tanggal' => $j->tanggal->format('d/m/Y'),
-                'Akun' => $j->akun->nama ?? '-',
-                'Keterangan' => $j->keterangan ?? '-',
-                'Debit' => $j->debit,
-                'Kredit' => $j->kredit,
+                __('export.tanggal') => $j->tanggal->format('d/m/Y'),
+                __('export.akun') => $j->akun->nama ?? '-',
+                __('export.keterangan') => $j->keterangan ?? '-',
+                __('export.debit') => $j->debit,
+                __('export.kredit') => $j->kredit,
             ];
         });
 
-        return Excel::download(new \App\Exports\CollectionExport($data, 'Jurnal Umum'), 'Jurnal_' . $dari . '_' . $sampai . '.xlsx');
+        return Excel::download(new \App\Exports\CollectionExport($data, __('export.excel.jurnal_sheet')), 'Jurnal_' . $dari . '_' . $sampai . '.xlsx');
     }
 
     public function barangMasukExcel(Request $request)
@@ -67,18 +67,18 @@ class ExportController extends Controller
             ->get()
             ->map(function ($m) {
                 return [
-                    'Tanggal' => $m->tanggal->format('d/m/Y'),
-                    'Kode' => $m->barang->kode ?? '-',
-                    'Barang' => $m->barang->nama ?? '-',
-                    'Jumlah' => $m->jumlah,
-                    'Harga Satuan' => $m->harga_satuan,
-                    'Total' => $m->total_harga,
-                    'Supplier' => $m->supplier ?? '-',
-                    'User' => $m->user->name ?? '-',
+                    __('export.tanggal') => $m->tanggal->format('d/m/Y'),
+                    __('export.kode') => $m->barang->kode ?? '-',
+                    __('export.nama_barang') => $m->barang->nama ?? '-',
+                    __('export.jumlah') => $m->jumlah,
+                    __('export.harga_satuan') => $m->harga_satuan,
+                    __('export.total') => $m->total_harga,
+                    __('export.supplier') => $m->supplier ?? '-',
+                    __('export.excel.petugas') => $m->user->name ?? '-',
                 ];
             });
 
-        return Excel::download(new \App\Exports\CollectionExport($data, 'Barang Masuk'), 'Barang_Masuk_' . $dari . '_' . $sampai . '.xlsx');
+        return Excel::download(new \App\Exports\CollectionExport($data, __('export.excel.masuk_sheet')), 'Barang_Masuk_' . $dari . '_' . $sampai . '.xlsx');
     }
 
     public function barangKeluarExcel(Request $request)
@@ -92,18 +92,18 @@ class ExportController extends Controller
             ->get()
             ->map(function ($k) {
                 return [
-                    'Tanggal' => $k->tanggal->format('d/m/Y'),
-                    'Kode' => $k->barang->kode ?? '-',
-                    'Barang' => $k->barang->nama ?? '-',
-                    'Jumlah' => $k->jumlah,
-                    'Harga Satuan' => $k->harga_satuan,
-                    'Total' => $k->total_harga,
-                    'Tujuan' => $k->tujuan ?? '-',
-                    'User' => $k->user->name ?? '-',
+                    __('export.tanggal') => $k->tanggal->format('d/m/Y'),
+                    __('export.kode') => $k->barang->kode ?? '-',
+                    __('export.nama_barang') => $k->barang->nama ?? '-',
+                    __('export.jumlah') => $k->jumlah,
+                    __('export.harga_satuan') => $k->harga_satuan,
+                    __('export.total') => $k->total_harga,
+                    __('export.tujuan') => $k->tujuan ?? '-',
+                    __('export.excel.petugas') => $k->user->name ?? '-',
                 ];
             });
 
-        return Excel::download(new \App\Exports\CollectionExport($data, 'Barang Keluar'), 'Barang_Keluar_' . $dari . '_' . $sampai . '.xlsx');
+        return Excel::download(new \App\Exports\CollectionExport($data, __('export.excel.keluar_sheet')), 'Barang_Keluar_' . $dari . '_' . $sampai . '.xlsx');
     }
 
     public function perputaranExcel()
@@ -116,17 +116,17 @@ class ExportController extends Controller
                 $keluar = $b->barangKeluars()->sum('jumlah');
                 $avg = ($masuk + $b->stok) > 0 ? round($keluar / (($masuk + $b->stok) / 2), 2) : 0;
                 return [
-                    'Kode' => $b->kode,
-                    'Nama' => $b->nama,
-                    'Kategori' => $b->kategori->nama ?? '-',
-                    'Stok' => $b->stok,
-                    'Total Masuk' => $masuk,
-                    'Total Keluar' => $keluar,
-                    'Rasio Perputaran' => $avg,
+                    __('export.kode') => $b->kode,
+                    __('export.nama_barang') => $b->nama,
+                    __('export.kategori') => $b->kategori->nama ?? '-',
+                    __('export.stok') => $b->stok,
+                    __('export.total_masuk_label') => $masuk,
+                    __('export.total_keluar_label') => $keluar,
+                    __('export.excel.rasio_perputaran') => $avg,
                 ];
             });
 
-        return Excel::download(new \App\Exports\CollectionExport($data, 'Perputaran Stok'), 'Perputaran_Stok_' . now()->format('Ymd') . '.xlsx');
+        return Excel::download(new \App\Exports\CollectionExport($data, __('export.excel.perputaran_sheet')), 'Perputaran_Stok_' . now()->format('Ymd') . '.xlsx');
     }
 
     // ============ PDF EXPORTS ============
@@ -290,13 +290,13 @@ class ExportController extends Controller
 
         $data = collect();
         foreach ($pendapatan as $p) {
-            $data->push(['Tipe' => 'Pendapatan', 'Kode' => $p->kode, 'Nama Akun' => $p->nama, 'Saldo' => $p->saldo_periode]);
+            $data->push([__('export.excel.tipe') => __('export.pendapatan'), __('export.kode') => $p->kode, __('export.excel.nama_akun') => $p->nama, __('export.excel.saldo') => $p->saldo_periode]);
         }
         foreach ($beban as $b) {
-            $data->push(['Tipe' => 'Beban', 'Kode' => $b->kode, 'Nama Akun' => $b->nama, 'Saldo' => $b->saldo_periode]);
+            $data->push([__('export.excel.tipe') => __('export.beban'), __('export.kode') => $b->kode, __('export.excel.nama_akun') => $b->nama, __('export.excel.saldo') => $b->saldo_periode]);
         }
 
-        return Excel::download(new \App\Exports\CollectionExport($data, 'Laba Rugi'), 'Laba_Rugi_' . $dari . '_' . $sampai . '.xlsx');
+        return Excel::download(new \App\Exports\CollectionExport($data, __('export.excel.laba_rugi_sheet')), 'Laba_Rugi_' . $dari . '_' . $sampai . '.xlsx');
     }
 
     public function neracaExcel(Request $request)
@@ -316,10 +316,10 @@ class ExportController extends Controller
                     $saldo = JurnalEntry::where('akun_id', $akun->id)->where('tanggal', '<=', $tanggal)->sum('debit')
                            - JurnalEntry::where('akun_id', $akun->id)->where('tanggal', '<=', $tanggal)->sum('kredit');
                 }
-                $data->push(['Tipe' => ucfirst($tipe), 'Kode' => $akun->kode, 'Nama Akun' => $akun->nama, 'Saldo' => $saldo]);
+                $data->push([__('export.excel.tipe') => ucfirst($tipe), __('export.kode') => $akun->kode, __('export.excel.nama_akun') => $akun->nama, __('export.excel.saldo') => $saldo]);
             }
         }
 
-        return Excel::download(new \App\Exports\CollectionExport($data, 'Neraca'), 'Neraca_' . $tanggal . '.xlsx');
+        return Excel::download(new \App\Exports\CollectionExport($data, __('export.excel.neraca_sheet')), 'Neraca_' . $tanggal . '.xlsx');
     }
 }

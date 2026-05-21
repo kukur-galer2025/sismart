@@ -28,18 +28,18 @@ class LaporanStokExport implements FromCollection, WithHeadings, WithMapping, Wi
     public function headings(): array
     {
         return [
-            'No',
-            'Kode Barang',
-            'Nama Barang',
-            'Kategori',
-            'Satuan',
-            'Metode Stok',
-            'Stok',
-            'Harga Rata-rata (Rp)',
-            'Total Nilai (Rp)',
-            'Safety Stock',
-            'Reorder Point',
-            'Status',
+            __('export.no'), 
+            __('export.excel.kode_barang'), 
+            __('export.excel.nama_barang'), 
+            __('export.kategori'), 
+            __('export.satuan'), 
+            __('export.excel.metode_stok'), 
+            __('export.stok'), 
+            __('export.excel.harga_rata'), 
+            __('export.excel.total_nilai'), 
+            __('export.excel.safety_stock'), 
+            __('export.excel.reorder_point'), 
+            __('export.status')
         ];
     }
 
@@ -77,9 +77,9 @@ class LaporanStokExport implements FromCollection, WithHeadings, WithMapping, Wi
         // Title row above the table
         $sheet->insertNewRowBefore(1, 3);
         $sheet->mergeCells('A1:L1');
-        $sheet->setCellValue('A1', 'LAPORAN PERSEDIAAN BARANG - SISmart');
+        $sheet->setCellValue('A1', __('export.excel.laporan_stok_title'));
         $sheet->mergeCells('A2:L2');
-        $sheet->setCellValue('A2', 'Tanggal: ' . now()->translatedFormat('d F Y'));
+        $sheet->setCellValue('A2', __('export.tanggal') . ': ' . now()->format('d/m/Y'));
         $sheet->mergeCells('A3:L3');
 
         // Format currency columns
@@ -118,6 +118,6 @@ class LaporanStokExport implements FromCollection, WithHeadings, WithMapping, Wi
 
     public function title(): string
     {
-        return 'Laporan Stok';
+        return __('export.excel.laporan_stok_sheet');
     }
 }

@@ -16,29 +16,29 @@
 </head><body>
     <div class="header">
         <h1>SISmart - Smart Inventory System</h1>
-        <p>LAPORAN LABA RUGI</p>
-        <p>Periode: {{ \Carbon\Carbon::parse($dari)->format('d/m/Y') }} s/d {{ \Carbon\Carbon::parse($sampai)->format('d/m/Y') }}</p>
+        <p>{{ __('export.laporan_laba_rugi') }}</p>
+        <p>{{ __('export.periode') }}: {{ \Carbon\Carbon::parse($dari)->format('d/m/Y') }} {{ __('export.sd') }} {{ \Carbon\Carbon::parse($sampai)->format('d/m/Y') }}</p>
     </div>
 
     <div class="section">
-        <div class="section-title" style="color:#059669;background:#f0fdf4;">PENDAPATAN</div>
+        <div class="section-title" style="color:#059669;background:#f0fdf4;">{{ __('export.pendapatan') }}</div>
         @foreach($pendapatan as $p)
         <div class="row"><span>{{ $p->nama }} ({{ $p->kode }})</span><span>Rp {{ number_format($p->saldo_periode,0,',','.') }}</span></div>
         @endforeach
-        <div class="total-box" style="background:#f0fdf4;color:#059669;border:1px solid #a7f3d0;"><span>Total Pendapatan</span><span style="font-size:14px">Rp {{ number_format($totalPendapatan,0,',','.') }}</span></div>
+        <div class="total-box" style="background:#f0fdf4;color:#059669;border:1px solid #a7f3d0;"><span>{{ __('export.total_pendapatan') }}</span><span style="font-size:14px">Rp {{ number_format($totalPendapatan,0,',','.') }}</span></div>
     </div>
 
     <div class="section">
-        <div class="section-title" style="color:#dc2626;background:#fef2f2;">BEBAN</div>
+        <div class="section-title" style="color:#dc2626;background:#fef2f2;">{{ __('export.beban') }}</div>
         @foreach($beban as $b)
         <div class="row"><span>{{ $b->nama }} ({{ $b->kode }})</span><span>Rp {{ number_format($b->saldo_periode,0,',','.') }}</span></div>
         @endforeach
-        <div class="total-box" style="background:#fef2f2;color:#dc2626;border:1px solid #fecaca;"><span>Total Beban</span><span style="font-size:14px">Rp {{ number_format($totalBeban,0,',','.') }}</span></div>
+        <div class="total-box" style="background:#fef2f2;color:#dc2626;border:1px solid #fecaca;"><span>{{ __('export.total_beban') }}</span><span style="font-size:14px">Rp {{ number_format($totalBeban,0,',','.') }}</span></div>
     </div>
 
     <div class="result-box" style="background:{{ $labaRugi >= 0 ? '#f0fdf4' : '#fef2f2' }};border:2px solid {{ $labaRugi >= 0 ? '#059669' : '#dc2626' }};color:{{ $labaRugi >= 0 ? '#059669' : '#dc2626' }}">
-        <p style="font-size:12px;margin-bottom:5px">{{ $labaRugi >= 0 ? 'LABA BERSIH' : 'RUGI BERSIH' }}</p>
+        <p style="font-size:12px;margin-bottom:5px">{{ $labaRugi >= 0 ? __('export.laba_bersih') : __('export.rugi_bersih') }}</p>
         <p style="font-size:24px;font-weight:bold">Rp {{ number_format(abs($labaRugi),0,',','.') }}</p>
     </div>
-    <div class="footer">Dicetak oleh {{ auth()->user()->name }} pada {{ now()->translatedFormat('d F Y H:i') }} — SISmart v1.0</div>
+    <div class="footer">{{ __('export.dicetak_oleh') }} {{ auth()->user()->name }} {{ __('export.pada') }} {{ now()->translatedFormat('d F Y H:i') }} — SISmart v1.0</div>
 </body></html>

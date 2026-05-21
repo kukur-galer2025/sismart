@@ -16,21 +16,21 @@
 </head><body>
     <div class="header">
         <h1>SISmart - Smart Inventory System</h1>
-        <p>JURNAL UMUM</p>
-        <p>Periode: {{ \Carbon\Carbon::parse($dari)->format('d/m/Y') }} s/d {{ \Carbon\Carbon::parse($sampai)->format('d/m/Y') }}</p>
+        <p>{{ __('export.laporan_jurnal') }}</p>
+        <p>{{ __('export.periode') }}: {{ \Carbon\Carbon::parse($dari)->format('d/m/Y') }} {{ __('export.sd') }} {{ \Carbon\Carbon::parse($sampai)->format('d/m/Y') }}</p>
     </div>
 
     <table>
-        <thead><tr><th class="text-center" style="width:30px">No</th><th>Tanggal</th><th>Akun</th><th>Keterangan</th><th class="text-right">Debit (Rp)</th><th class="text-right">Kredit (Rp)</th></tr></thead>
+        <thead><tr><th class="text-center" style="width:30px">{{ __('export.no') }}</th><th>{{ __('export.tanggal') }}</th><th>{{ __('export.akun') }}</th><th>{{ __('export.keterangan') }}</th><th class="text-right">{{ __('export.debit') }}</th><th class="text-right">{{ __('export.kredit') }}</th></tr></thead>
         <tbody>
             @forelse($jurnals as $i => $j)
             <tr><td class="text-center">{{ $i+1 }}</td><td>{{ $j->tanggal->format('d/m/Y') }}</td><td>{{ $j->akun->nama ?? '-' }}</td><td>{{ $j->keterangan ?? '-' }}</td><td class="text-right">{{ $j->debit > 0 ? 'Rp '.number_format($j->debit,0,',','.') : '-' }}</td><td class="text-right">{{ $j->kredit > 0 ? 'Rp '.number_format($j->kredit,0,',','.') : '-' }}</td></tr>
-            @empty <tr><td colspan="6" class="text-center" style="padding:15px">Tidak ada data</td></tr>
+            @empty <tr><td colspan="6" class="text-center" style="padding:15px">{{ __('export.tidak_ada_data') }}</td></tr>
             @endforelse
             @if($jurnals->count())
-            <tr class="total-row"><td colspan="4" class="text-right">Total</td><td class="text-right">Rp {{ number_format($totalDebit,0,',','.') }}</td><td class="text-right">Rp {{ number_format($totalKredit,0,',','.') }}</td></tr>
+            <tr class="total-row"><td colspan="4" class="text-right">{{ __('export.total') }}</td><td class="text-right">Rp {{ number_format($totalDebit,0,',','.') }}</td><td class="text-right">Rp {{ number_format($totalKredit,0,',','.') }}</td></tr>
             @endif
         </tbody>
     </table>
-    <div class="footer">Dicetak oleh {{ auth()->user()->name }} pada {{ now()->translatedFormat('d F Y H:i') }} — SISmart v1.0</div>
+    <div class="footer">{{ __('export.dicetak_oleh') }} {{ auth()->user()->name }} {{ __('export.pada') }} {{ now()->translatedFormat('d F Y H:i') }} — SISmart v1.0</div>
 </body></html>

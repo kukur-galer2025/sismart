@@ -6,10 +6,10 @@
         <form method="GET" action="{{ route('barang-keluar.index') }}" class="flex items-center gap-1.5 flex-wrap">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari..." class="form-input !w-full sm:!w-32 !py-1.5 !text-[11px]">
             <input type="date" name="dari" value="{{ request('dari') }}" class="form-input !w-[120px] !py-1.5 !text-[11px]">
-            <span class="text-[10px] hidden sm:inline" style="color:var(--text-muted)">s/d</span>
+            <span class="text-[10px] hidden sm:inline" style="color:var(--text-muted)" data-lang="common.sd">s/d</span>
             <input type="date" name="sampai" value="{{ request('sampai') }}" class="form-input !w-[120px] !py-1.5 !text-[11px]">
-            <button type="submit" class="btn-primary !text-[11px] !py-1.5 !px-2.5"><i class="fas fa-filter"></i> Filter</button>
-            @if(request()->anyFilled(['search','dari','sampai']))<a href="{{ route('barang-keluar.index') }}" class="btn-outline !text-[11px] !py-1.5 !px-2.5"><i class="fas fa-times"></i> Reset</a>@endif
+            <button type="submit" class="btn-primary !text-[11px] !py-1.5 !px-2.5"><i class="fas fa-filter"></i> <span data-lang="common.filter">Filter</span></button>
+            @if(request()->anyFilled(['search','dari','sampai']))<a href="{{ route('barang-keluar.index') }}" class="btn-outline !text-[11px] !py-1.5 !px-2.5"><i class="fas fa-times"></i> <span data-lang="common.reset">Reset</span></a>@endif
         </form>
         <div class="flex items-center gap-1.5 flex-wrap">
             <a href="{{ route('barang-keluar.create') }}" class="btn-danger !text-[11px] !py-1.5 !px-2.5"><i class="fas fa-plus"></i> Input Keluar</a>

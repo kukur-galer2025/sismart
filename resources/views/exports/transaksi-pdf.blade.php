@@ -19,40 +19,40 @@
 </head><body>
     <div class="header">
         <h1>SISmart - Smart Inventory System</h1>
-        <p>LAPORAN TRANSAKSI</p>
-        <p>Periode: {{ \Carbon\Carbon::parse($dari)->format('d/m/Y') }} s/d {{ \Carbon\Carbon::parse($sampai)->format('d/m/Y') }}</p>
+        <p>{{ __('export.laporan_transaksi') }}</p>
+        <p>{{ __('export.periode') }}: {{ \Carbon\Carbon::parse($dari)->format('d/m/Y') }} {{ __('export.sd') }} {{ \Carbon\Carbon::parse($sampai)->format('d/m/Y') }}</p>
     </div>
 
     <table class="summary-table">
         <tr>
-            <td style="background:#f0fdf4;width:33%"><strong>Total Masuk:</strong> Rp {{ number_format($totalMasuk,0,',','.') }}</td>
-            <td style="background:#fef2f2;width:33%"><strong>Total Keluar:</strong> Rp {{ number_format($totalKeluar,0,',','.') }}</td>
-            <td style="background:#eff6ff;width:33%"><strong>Selisih:</strong> Rp {{ number_format($totalMasuk-$totalKeluar,0,',','.') }}</td>
+            <td style="background:#f0fdf4;width:33%"><strong>{{ __('export.total_masuk') }}</strong> Rp {{ number_format($totalMasuk,0,',','.') }}</td>
+            <td style="background:#fef2f2;width:33%"><strong>{{ __('export.total_keluar') }}</strong> Rp {{ number_format($totalKeluar,0,',','.') }}</td>
+            <td style="background:#eff6ff;width:33%"><strong>{{ __('export.selisih') }}</strong> Rp {{ number_format($totalMasuk-$totalKeluar,0,',','.') }}</td>
         </tr>
     </table>
 
-    <div class="section-title" style="color:#059669;background:#f0fdf4;">BARANG MASUK ({{ $masuk->count() }} transaksi)</div>
+    <div class="section-title" style="color:#059669;background:#f0fdf4;">{{ __('export.barang_masuk') }} ({{ $masuk->count() }} {{ __('export.transaksi') }})</div>
     <table>
-        <thead><tr class="bg-green"><th class="text-center" style="width:30px">No</th><th>Tanggal</th><th>Kode TRX</th><th>Barang</th><th>Supplier</th><th class="text-right">Jumlah</th><th class="text-right">Total (Rp)</th></tr></thead>
+        <thead><tr class="bg-green"><th class="text-center" style="width:30px">{{ __('export.no') }}</th><th>{{ __('export.tanggal') }}</th><th>{{ __('export.kode_trx') }}</th><th>{{ __('export.nama_barang') }}</th><th>{{ __('export.supplier') }}</th><th class="text-right">{{ __('export.jumlah') }}</th><th class="text-right">{{ __('export.total_rp') }}</th></tr></thead>
         <tbody>
             @forelse($masuk as $i => $m)
             <tr><td class="text-center">{{ $i+1 }}</td><td>{{ $m->tanggal->format('d/m/Y') }}</td><td>{{ $m->kode_transaksi }}</td><td>{{ $m->barang->nama }}</td><td>{{ $m->supplier ?? '-' }}</td><td class="text-right">{{ number_format($m->jumlah) }}</td><td class="text-right">Rp {{ number_format($m->total_harga,0,',','.') }}</td></tr>
-            @empty <tr><td colspan="7" class="text-center" style="padding:15px">Tidak ada data</td></tr>
+            @empty <tr><td colspan="7" class="text-center" style="padding:15px">{{ __('export.tidak_ada_data') }}</td></tr>
             @endforelse
-            @if($masuk->count()) <tr class="total-row"><td colspan="6" class="text-right">Total</td><td class="text-right">Rp {{ number_format($totalMasuk,0,',','.') }}</td></tr> @endif
+            @if($masuk->count()) <tr class="total-row"><td colspan="6" class="text-right">{{ __('export.total') }}</td><td class="text-right">Rp {{ number_format($totalMasuk,0,',','.') }}</td></tr> @endif
         </tbody>
     </table>
 
-    <div class="section-title" style="color:#dc2626;background:#fef2f2;">BARANG KELUAR ({{ $keluar->count() }} transaksi)</div>
+    <div class="section-title" style="color:#dc2626;background:#fef2f2;">{{ __('export.barang_keluar') }} ({{ $keluar->count() }} {{ __('export.transaksi') }})</div>
     <table>
-        <thead><tr class="bg-red"><th class="text-center" style="width:30px">No</th><th>Tanggal</th><th>Kode TRX</th><th>Barang</th><th>Tujuan</th><th class="text-right">Jumlah</th><th class="text-right">Total HPP (Rp)</th></tr></thead>
+        <thead><tr class="bg-red"><th class="text-center" style="width:30px">{{ __('export.no') }}</th><th>{{ __('export.tanggal') }}</th><th>{{ __('export.kode_trx') }}</th><th>{{ __('export.nama_barang') }}</th><th>{{ __('export.tujuan') }}</th><th class="text-right">{{ __('export.jumlah') }}</th><th class="text-right">{{ __('export.total_hpp') }}</th></tr></thead>
         <tbody>
             @forelse($keluar as $i => $k)
             <tr><td class="text-center">{{ $i+1 }}</td><td>{{ $k->tanggal->format('d/m/Y') }}</td><td>{{ $k->kode_transaksi }}</td><td>{{ $k->barang->nama }}</td><td>{{ $k->tujuan ?? '-' }}</td><td class="text-right">{{ number_format($k->jumlah) }}</td><td class="text-right">Rp {{ number_format($k->total_harga,0,',','.') }}</td></tr>
-            @empty <tr><td colspan="7" class="text-center" style="padding:15px">Tidak ada data</td></tr>
+            @empty <tr><td colspan="7" class="text-center" style="padding:15px">{{ __('export.tidak_ada_data') }}</td></tr>
             @endforelse
-            @if($keluar->count()) <tr class="total-row"><td colspan="6" class="text-right">Total</td><td class="text-right">Rp {{ number_format($totalKeluar,0,',','.') }}</td></tr> @endif
+            @if($keluar->count()) <tr class="total-row"><td colspan="6" class="text-right">{{ __('export.total') }}</td><td class="text-right">Rp {{ number_format($totalKeluar,0,',','.') }}</td></tr> @endif
         </tbody>
     </table>
-    <div class="footer">Dicetak oleh {{ auth()->user()->name }} pada {{ now()->translatedFormat('d F Y H:i') }} — SISmart v1.0</div>
+    <div class="footer">{{ __('export.dicetak_oleh') }} {{ auth()->user()->name }} {{ __('export.pada') }} {{ now()->translatedFormat('d F Y H:i') }} — SISmart v1.0</div>
 </body></html>

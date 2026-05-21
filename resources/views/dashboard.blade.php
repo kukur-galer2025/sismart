@@ -3,42 +3,45 @@
 @section('content')
 <div class="space-y-5">
     {{-- Greeting --}}
-    @php $hour = now()->hour; $greet = $hour < 12 ? 'Selamat Pagi' : ($hour < 15 ? 'Selamat Siang' : ($hour < 18 ? 'Selamat Sore' : 'Selamat Malam')); $icon = $hour < 12 ? 'sun' : ($hour < 18 ? 'cloud-sun' : 'moon'); @endphp
+    @php $hour = now()->hour; $greetKey = $hour < 12 ? 'dash.greeting_pagi' : ($hour < 15 ? 'dash.greeting_siang' : ($hour < 18 ? 'dash.greeting_sore' : 'dash.greeting_malam')); $greet = $hour < 12 ? 'Selamat Pagi' : ($hour < 15 ? 'Selamat Siang' : ($hour < 18 ? 'Selamat Sore' : 'Selamat Malam')); $icon = $hour < 12 ? 'sun' : ($hour < 18 ? 'cloud-sun' : 'moon'); @endphp
     <div class="glass rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
             <h2 class="text-lg sm:text-xl font-bold flex items-center gap-2">
-                <i class="fas fa-{{ $icon }} text-amber-500"></i> {{ $greet }}, {{ auth()->user()->name }}!
+                <i class="fas fa-{{ $icon }} text-amber-500"></i> <span data-lang="{{ $greetKey }}">{{ $greet }}</span>, {{ auth()->user()->name }}!
             </h2>
-            <p class="text-xs sm:text-sm mt-1" style="color:var(--text-muted)">{{ now()->translatedFormat('l, d F Y') }} — Ini ringkasan sistem Anda hari ini.</p>
+            <p class="text-xs sm:text-sm mt-1" style="color:var(--text-muted)">{{ now()->translatedFormat('l, d F Y') }} — <span data-lang="dash.summary">Ini ringkasan sistem Anda hari ini.</span></p>
         </div>
         <div class="flex items-center gap-2">
-            <a href="{{ route('barang-masuk.create') }}" class="btn-success !text-[11px] !py-1.5 !px-2.5"><i class="fas fa-arrow-down"></i> Masuk</a>
-            <a href="{{ route('barang-keluar.create') }}" class="btn-danger !text-[11px] !py-1.5 !px-2.5"><i class="fas fa-arrow-up"></i> Keluar</a>
+            <a href="{{ route('barang-masuk.create') }}" class="btn-success !text-[11px] !py-1.5 !px-2.5"><i class="fas fa-arrow-down"></i> <span data-lang="dash.masuk">Masuk</span></a>
+            <a href="{{ route('barang-keluar.create') }}" class="btn-danger !text-[11px] !py-1.5 !px-2.5"><i class="fas fa-arrow-up"></i> <span data-lang="dash.keluar">Keluar</span></a>
         </div>
     </div>
 
     {{-- Stats --}}
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        @foreach([
-            ['Total Barang', number_format($totalBarang), 'fa-boxes', '99,102,241', 'indigo', 'Aktif di sistem', 'arrow-up', 'emerald'],
-            ['Total Stok', number_format($totalStok), 'fa-cubes', '6,182,212', 'cyan', 'Total unit tersedia', '', ''],
-            ['Nilai Persediaan', 'Rp '.number_format($nilaiPersediaan,0,',','.'), 'fa-coins', '16,185,129', 'emerald', 'Estimasi nilai aset', '', ''],
-            ['Stok Kritis', $stokKritis, 'fa-exclamation-triangle', '239,68,68', 'rose', $stokKritis > 0 ? 'Butuh perhatian' : 'Semua aman', $stokKritis > 0 ? 'exclamation-circle' : 'check-circle', $stokKritis > 0 ? 'rose' : 'emerald']
-        ] as [$label, $value, $icon, $rgb, $color, $note, $noteIcon, $noteColor])
+        @php
+            $stats = [
+                ['dash.total_barang', 'Total Barang', number_format($totalBarang), 'fa-boxes', '99,102,241', 'indigo', 'dash.aktif', 'Aktif di sistem', 'arrow-up', 'emerald'],
+                ['dash.total_stok', 'Total Stok', number_format($totalStok), 'fa-cubes', '6,182,212', 'cyan', 'dash.unit_tersedia', 'Total unit tersedia', '', ''],
+                ['dash.nilai_persediaan', 'Nilai Persediaan', 'Rp '.number_format($nilaiPersediaan,0,',','.'), 'fa-coins', '16,185,129', 'emerald', 'dash.estimasi_aset', 'Estimasi nilai aset', '', ''],
+                ['dash.stok_kritis', 'Stok Kritis', $stokKritis, 'fa-exclamation-triangle', '239,68,68', 'rose', $stokKritis > 0 ? 'dash.butuh_perhatian' : 'dash.semua_aman', $stokKritis > 0 ? 'Butuh perhatian' : 'Semua aman', $stokKritis > 0 ? 'exclamation-circle' : 'check-circle', $stokKritis > 0 ? 'rose' : 'emerald']
+            ];
+        @endphp
+        @foreach($stats as [$langKey, $label, $value, $icon, $rgb, $color, $noteKey, $note, $noteIcon, $noteColor])
         <div class="glass p-4 sm:p-5 rounded-2xl stat-card">
             <div class="flex justify-between items-start gap-2">
                 <div class="min-w-0">
-                    <p class="text-[11px] sm:text-xs font-medium truncate" style="color:var(--text-muted)">{{ $label }}</p>
-                    <h3 class="text-lg sm:text-2xl font-bold mt-1 truncate {{ $label === 'Stok Kritis' && $stokKritis > 0 ? 'text-rose-600 dark:text-rose-400' : '' }}">{{ $value }}</h3>
+                    <p class="text-[11px] sm:text-xs font-medium truncate" style="color:var(--text-muted)" data-lang="{{ $langKey }}">{{ $label }}</p>
+                    <h3 class="text-lg sm:text-2xl font-bold mt-1 truncate {{ $langKey === 'dash.stok_kritis' && $stokKritis > 0 ? 'text-rose-600 dark:text-rose-400' : '' }}">{{ $value }}</h3>
                 </div>
                 <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shrink-0" style="background:rgba({{ $rgb }},0.12)">
                     <i class="fas {{ $icon }} text-{{ $color }}-500 text-sm sm:text-base"></i>
                 </div>
             </div>
             @if($noteIcon)
-            <p class="text-[10px] sm:text-xs mt-2 text-{{ $noteColor }}-600 dark:text-{{ $noteColor }}-400"><i class="fas fa-{{ $noteIcon }} mr-0.5"></i>{{ $note }}</p>
+            <p class="text-[10px] sm:text-xs mt-2 text-{{ $noteColor }}-600 dark:text-{{ $noteColor }}-400"><i class="fas fa-{{ $noteIcon }} mr-0.5"></i><span data-lang="{{ $noteKey }}">{{ $note }}</span></p>
             @else
-            <p class="text-[10px] sm:text-xs mt-2" style="color:var(--text-muted)">{{ $note }}</p>
+            <p class="text-[10px] sm:text-xs mt-2" style="color:var(--text-muted)" data-lang="{{ $noteKey }}">{{ $note }}</p>
             @endif
         </div>
         @endforeach
@@ -48,7 +51,7 @@
     @if(count($notifications) > 0)
     <div x-data="{ open:true }" class="glass rounded-2xl overflow-hidden" style="border-color:rgba(239,68,68,0.2)">
         <button @click="open=!open" class="w-full px-4 py-3 flex items-center justify-between" style="background:rgba(239,68,68,0.06)">
-            <span class="flex items-center gap-2 text-sm font-semibold text-rose-700 dark:text-rose-400"><i class="fas fa-bell pulse-dot"></i> Peringatan ({{ count($notifications) }})</span>
+            <span class="flex items-center gap-2 text-sm font-semibold text-rose-700 dark:text-rose-400"><i class="fas fa-bell pulse-dot"></i> <span data-lang="dash.peringatan">Peringatan</span> ({{ count($notifications) }})</span>
             <i class="fas fa-chevron-down transition-transform text-xs" :class="open&&'rotate-180'" style="color:var(--text-muted)"></i>
         </button>
         <div x-show="open" x-collapse class="p-2 max-h-40 overflow-y-auto">
@@ -62,11 +65,11 @@
     {{-- Row 1: Trend + Kategori --}}
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
         <div class="glass p-4 sm:p-5 rounded-2xl lg:col-span-2">
-            <h3 class="font-semibold mb-4 text-sm flex items-center gap-2"><i class="fas fa-chart-area text-indigo-500"></i> Trend Transaksi (Nilai)</h3>
+            <h3 class="font-semibold mb-4 text-sm flex items-center gap-2"><i class="fas fa-chart-area text-indigo-500"></i> <span data-lang="dash.trend_transaksi">Trend Transaksi (Nilai)</span></h3>
             <div id="chartTrend" class="w-full" style="min-height:220px; height:260px"></div>
         </div>
         <div class="glass p-4 sm:p-5 rounded-2xl">
-            <h3 class="font-semibold mb-4 text-sm flex items-center gap-2"><i class="fas fa-chart-pie text-cyan-500"></i> Stok per Kategori</h3>
+            <h3 class="font-semibold mb-4 text-sm flex items-center gap-2"><i class="fas fa-chart-pie text-cyan-500"></i> <span data-lang="dash.stok_kategori">Stok per Kategori</span></h3>
             <div id="chartKategori" class="w-full" style="min-height:220px; height:260px"></div>
         </div>
     </div>
@@ -74,15 +77,15 @@
     {{-- Row 2: Volume + Status + Stok Terbanyak --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
         <div class="glass p-4 sm:p-5 rounded-2xl">
-            <h3 class="font-semibold mb-4 text-sm flex items-center gap-2"><i class="fas fa-chart-bar text-emerald-500"></i> Volume Transaksi</h3>
+            <h3 class="font-semibold mb-4 text-sm flex items-center gap-2"><i class="fas fa-chart-bar text-emerald-500"></i> <span data-lang="dash.volume_transaksi">Volume Transaksi</span></h3>
             <div id="chartVolume" class="w-full" style="min-height:200px; height:240px"></div>
         </div>
         <div class="glass p-4 sm:p-5 rounded-2xl">
-            <h3 class="font-semibold mb-4 text-sm flex items-center gap-2"><i class="fas fa-signal text-amber-500"></i> Status Stok</h3>
+            <h3 class="font-semibold mb-4 text-sm flex items-center gap-2"><i class="fas fa-signal text-amber-500"></i> <span data-lang="dash.status_stok">Status Stok</span></h3>
             <div id="chartStatus" class="w-full" style="min-height:200px; height:240px"></div>
         </div>
         <div class="glass p-4 sm:p-5 rounded-2xl sm:col-span-2 lg:col-span-1">
-            <h3 class="font-semibold mb-4 text-sm flex items-center gap-2"><i class="fas fa-ranking-star text-purple-500"></i> Stok Terbanyak</h3>
+            <h3 class="font-semibold mb-4 text-sm flex items-center gap-2"><i class="fas fa-ranking-star text-purple-500"></i> <span data-lang="dash.stok_terbanyak">Stok Terbanyak</span></h3>
             <div id="chartTopItems" class="w-full" style="min-height:200px; height:240px"></div>
         </div>
     </div>
@@ -90,12 +93,12 @@
     {{-- Row 3: Nilai Kategori + Recent --}}
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
         <div class="glass p-4 sm:p-5 rounded-2xl">
-            <h3 class="font-semibold mb-4 text-sm flex items-center gap-2"><i class="fas fa-wallet text-rose-500"></i> Nilai per Kategori</h3>
+            <h3 class="font-semibold mb-4 text-sm flex items-center gap-2"><i class="fas fa-wallet text-rose-500"></i> <span data-lang="dash.nilai_kategori">Nilai per Kategori</span></h3>
             <div id="chartNilaiKat" class="w-full" style="min-height:200px; height:240px"></div>
         </div>
         <div class="glass rounded-2xl overflow-hidden">
             <div class="p-4 border-b flex justify-between items-center" style="border-color:var(--border-color)">
-                <h3 class="font-semibold text-sm flex items-center gap-2"><i class="fas fa-clock text-indigo-500"></i> Transaksi Terbaru</h3>
+                <h3 class="font-semibold text-sm flex items-center gap-2"><i class="fas fa-clock text-indigo-500"></i> <span data-lang="dash.transaksi_terbaru">Transaksi Terbaru</span></h3>
             </div>
             <div class="table-responsive" style="max-height:250px; overflow-y:auto">
                 <table class="w-full text-sm text-left">
@@ -115,7 +118,7 @@
                         </tr>
                         @endforeach
                         @if($recentMasuk->isEmpty() && $recentKeluar->isEmpty())
-                        <tr><td colspan="3" class="px-4 py-8 text-center text-xs" style="color:var(--text-muted)">Belum ada transaksi</td></tr>
+                        <tr><td colspan="3" class="px-4 py-8 text-center text-xs" style="color:var(--text-muted)" data-lang="dash.belum_ada_transaksi">Belum ada transaksi</td></tr>
                         @endif
                     </tbody>
                 </table>

@@ -16,18 +16,18 @@
 </head><body>
     <div class="header">
         <h1>SISmart - Smart Inventory System</h1>
-        <p>LAPORAN BARANG MASUK</p>
-        <p>Periode: {{ \Carbon\Carbon::parse($dari)->format('d/m/Y') }} s/d {{ \Carbon\Carbon::parse($sampai)->format('d/m/Y') }}</p>
+        <p>{{ __('export.laporan_barang_masuk') }}</p>
+        <p>{{ __('export.periode') }}: {{ \Carbon\Carbon::parse($dari)->format('d/m/Y') }} {{ __('export.sd') }} {{ \Carbon\Carbon::parse($sampai)->format('d/m/Y') }}</p>
     </div>
     <table>
-        <thead><tr><th class="text-center" style="width:30px">No</th><th>Tanggal</th><th>Kode</th><th>Barang</th><th>Supplier</th><th class="text-right">Jumlah</th><th class="text-right">Harga Satuan</th><th class="text-right">Total (Rp)</th></tr></thead>
+        <thead><tr><th class="text-center" style="width:30px">{{ __('export.no') }}</th><th>{{ __('export.tanggal') }}</th><th>{{ __('export.kode') }}</th><th>{{ __('export.nama_barang') }}</th><th>{{ __('export.supplier') }}</th><th class="text-right">{{ __('export.jumlah') }}</th><th class="text-right">{{ __('export.harga_satuan') }}</th><th class="text-right">{{ __('export.total_rp') }}</th></tr></thead>
         <tbody>
             @forelse($data as $i => $m)
             <tr><td class="text-center">{{ $i+1 }}</td><td>{{ $m->tanggal->format('d/m/Y') }}</td><td>{{ $m->barang->kode ?? '-' }}</td><td>{{ $m->barang->nama ?? '-' }}</td><td>{{ $m->supplier ?? '-' }}</td><td class="text-right">{{ number_format($m->jumlah) }}</td><td class="text-right">Rp {{ number_format($m->harga_satuan,0,',','.') }}</td><td class="text-right">Rp {{ number_format($m->total_harga,0,',','.') }}</td></tr>
-            @empty <tr><td colspan="8" class="text-center" style="padding:15px">Tidak ada data</td></tr>
+            @empty <tr><td colspan="8" class="text-center" style="padding:15px">{{ __('export.tidak_ada_data') }}</td></tr>
             @endforelse
-            @if($data->count())<tr class="total-row"><td colspan="7" class="text-right">Total</td><td class="text-right">Rp {{ number_format($total,0,',','.') }}</td></tr>@endif
+            @if($data->count())<tr class="total-row"><td colspan="7" class="text-right">{{ __('export.total') }}</td><td class="text-right">Rp {{ number_format($total,0,',','.') }}</td></tr>@endif
         </tbody>
     </table>
-    <div class="footer">Dicetak oleh {{ auth()->user()->name }} pada {{ now()->translatedFormat('d F Y H:i') }} — SISmart v1.0</div>
+    <div class="footer">{{ __('export.dicetak_oleh') }} {{ auth()->user()->name }} {{ __('export.pada') }} {{ now()->translatedFormat('d F Y H:i') }} — SISmart v1.0</div>
 </body></html>

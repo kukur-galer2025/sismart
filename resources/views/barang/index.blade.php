@@ -2,13 +2,9 @@
 @section('title', 'Data Barang')
 @section('content')
 <div class="space-y-6">
-    <div class="space-y-3">
-        <form method="GET" action="{{ route('barang.index') }}" class="flex gap-1.5 flex-wrap">
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari barang..." class="form-input flex-1 sm:w-56 !py-1.5 !text-[11px]">
-            <button type="submit" class="btn-primary !text-[11px] !py-1.5 !px-2.5"><i class="fas fa-search"></i></button>
-            @if(request('search'))<a href="{{ route('barang.index') }}" class="btn-outline !text-[11px] !py-1.5 !px-2.5"><i class="fas fa-times"></i></a>@endif
-        </form>
-        <a href="{{ route('barang.create') }}" class="btn-primary !text-[11px] sm:!text-xs w-full sm:w-auto justify-center !py-1.5 !px-2.5"><i class="fas fa-plus"></i> Tambah Barang</a>
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <h2 class="text-lg sm:text-xl font-bold" data-lang="brg.title">Data Barang</h2>
+        <a href="{{ route('barang.create') }}" class="btn-primary text-xs sm:text-sm w-full sm:w-auto justify-center"><i class="fas fa-plus"></i> <span data-lang="brg.tambah">Tambah Barang</span></a>
     </div>
 
     {{-- Mobile Cards --}}
@@ -35,14 +31,14 @@
         <div class="table-responsive">
             <table class="w-full text-sm text-left">
                 <thead><tr style="background:var(--bg-input)">
-                    <th class="px-5 py-3.5 text-xs font-semibold uppercase tracking-wider" style="color:var(--text-muted)">Kode</th>
-                    <th class="px-5 py-3.5 text-xs font-semibold uppercase tracking-wider" style="color:var(--text-muted)">Nama Barang</th>
-                    <th class="px-5 py-3.5 text-xs font-semibold uppercase tracking-wider hidden lg:table-cell" style="color:var(--text-muted)">Kategori</th>
-                    <th class="px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-center" style="color:var(--text-muted)">Metode</th>
-                    <th class="px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-right" style="color:var(--text-muted)">Stok</th>
-                    <th class="px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-right hidden md:table-cell" style="color:var(--text-muted)">Total Nilai</th>
-                    <th class="px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-center" style="color:var(--text-muted)">Status</th>
-                    <th class="px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-center" style="color:var(--text-muted)">Aksi</th>
+                    <th class="px-5 py-3 text-[11px] font-semibold uppercase tracking-wider" style="color:var(--text-muted)" data-lang="brg.kode">Kode</th>
+                    <th class="px-5 py-3 text-[11px] font-semibold uppercase tracking-wider" style="color:var(--text-muted)" data-lang="brg.nama">Nama Barang</th>
+                    <th class="px-5 py-3 text-[11px] font-semibold uppercase tracking-wider hidden lg:table-cell" style="color:var(--text-muted)" data-lang="brg.kategori">Kategori</th>
+                    <th class="px-5 py-3 text-[11px] font-semibold uppercase tracking-wider text-center" style="color:var(--text-muted)" data-lang="brg.metode">Metode</th>
+                    <th class="px-5 py-3 text-[11px] font-semibold uppercase tracking-wider text-right" style="color:var(--text-muted)" data-lang="brg.stok">Stok</th>
+                    <th class="px-5 py-3 text-[11px] font-semibold uppercase tracking-wider text-right hidden sm:table-cell" style="color:var(--text-muted)" data-lang="brg.total_nilai">Total Nilai</th>
+                    <th class="px-5 py-3 text-[11px] font-semibold uppercase tracking-wider text-center" style="color:var(--text-muted)" data-lang="brg.status">Status</th>
+                    <th class="px-5 py-3 text-[11px] font-semibold uppercase tracking-wider text-center" style="color:var(--text-muted)" data-lang="common.aksi">Aksi</th>
                 </tr></thead>
                 <tbody>
                     @forelse($barangs as $b)
@@ -53,7 +49,7 @@
                             <td class="px-5 py-3 hidden lg:table-cell" style="color:var(--text-secondary)">{{ $b->kategori->nama ?? '-' }}</td>
                             <td class="px-5 py-3 text-center text-[10px] uppercase font-bold tracking-wider {{ $b->metode_stok == 'fifo' ? 'text-cyan-600 dark:text-cyan-400' : 'text-fuchsia-600 dark:text-fuchsia-400' }}">{{ $b->metode_stok }}</td>
                             <td class="px-5 py-3 text-right font-bold">{{ number_format($b->stok) }}</td>
-                            <td class="px-5 py-3 text-right text-cyan-600 dark:text-cyan-400 font-medium hidden md:table-cell">Rp {{ number_format($b->total_nilai,0,',','.') }}</td>
+                            <td class="px-5 py-3 text-right text-cyan-600 dark:text-cyan-400 font-medium hidden sm:table-cell">Rp {{ number_format($b->total_nilai,0,',','.') }}</td>
                             <td class="px-5 py-3 text-center"><span class="px-2 py-0.5 rounded-full text-[10px] {{ $color }}">{{ $status }}</span></td>
                             <td class="px-5 py-3 text-center">
                                 <div class="flex items-center justify-center gap-1">
@@ -68,7 +64,7 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="8" class="px-5 py-12 text-center" style="color:var(--text-muted)"><i class="fas fa-box-open text-4xl mb-3 opacity-20"></i><p>Tidak ada data.</p></td></tr>
+                        <tr><td colspan="8" class="px-5 py-12 text-center" style="color:var(--text-muted)"><i class="fas fa-inbox text-4xl mb-3 opacity-20"></i><p data-lang="brg.tidak_ada">Tidak ada data barang</p></td></tr>
                     @endforelse
                 </tbody>
             </table>

@@ -24,19 +24,19 @@
 </head><body>
     <div class="header">
         <h1>SISmart - Smart Inventory System</h1>
-        <p>LAPORAN PERSEDIAAN BARANG</p>
-        <p>Tanggal: {{ now()->translatedFormat('d F Y') }}</p>
+        <p>{{ __('export.laporan_persediaan') }}</p>
+        <p>{{ __('export.tanggal') }}: {{ now()->translatedFormat('d F Y') }}</p>
     </div>
     <table>
         <tr style="margin-bottom:10px;">
-            <td style="border:none;padding:8px;background:#f0fdf4;width:33%"><strong>Total Jenis:</strong> {{ $totalItem }} barang</td>
-            <td style="border:none;padding:8px;background:#eff6ff;width:33%"><strong>Total Unit:</strong> {{ number_format($totalStok) }}</td>
-            <td style="border:none;padding:8px;background:#fef3c7;width:33%"><strong>Total Nilai:</strong> Rp {{ number_format($totalNilai,0,',','.') }}</td>
+            <td style="border:none;padding:8px;background:#f0fdf4;width:33%"><strong>{{ __('export.total_jenis') }}</strong> {{ $totalItem }} {{ __('export.barang') }}</td>
+            <td style="border:none;padding:8px;background:#eff6ff;width:33%"><strong>{{ __('export.total_unit') }}</strong> {{ number_format($totalStok) }}</td>
+            <td style="border:none;padding:8px;background:#fef3c7;width:33%"><strong>{{ __('export.total_nilai') }}:</strong> Rp {{ number_format($totalNilai,0,',','.') }}</td>
         </tr>
     </table>
     <table>
         <thead><tr>
-            <th class="text-center" style="width:30px">No</th><th>Kode</th><th>Nama Barang</th><th>Kategori</th><th class="text-center">Satuan</th><th class="text-center">Metode</th><th class="text-right">Stok</th><th class="text-right">Harga Rata2</th><th class="text-right">Total Nilai</th><th class="text-center">Status</th>
+            <th class="text-center" style="width:30px">{{ __('export.no') }}</th><th>{{ __('export.kode') }}</th><th>{{ __('export.nama_barang') }}</th><th>{{ __('export.kategori') }}</th><th class="text-center">{{ __('export.satuan') }}</th><th class="text-center">{{ __('export.metode') }}</th><th class="text-right">{{ __('export.stok') }}</th><th class="text-right">{{ __('export.harga_rata') }}</th><th class="text-right">{{ __('export.total_nilai') }}</th><th class="text-center">{{ __('export.status') }}</th>
         </tr></thead>
         <tbody>
             @foreach($barangs as $i => $b)
@@ -48,8 +48,8 @@
                 <td class="text-center status-{{ strtolower($b->status_stok) }}"><strong>{{ $b->status_stok }}</strong></td>
             </tr>
             @endforeach
-            <tr class="total-row"><td colspan="8" class="text-right">Grand Total</td><td class="text-right">Rp {{ number_format($totalNilai,0,',','.') }}</td><td></td></tr>
+            <tr class="total-row"><td colspan="8" class="text-right">{{ __('export.grand_total') }}</td><td class="text-right">Rp {{ number_format($totalNilai,0,',','.') }}</td><td></td></tr>
         </tbody>
     </table>
-    <div class="footer">Dicetak oleh {{ auth()->user()->name }} pada {{ now()->translatedFormat('d F Y H:i') }} — SISmart v1.0</div>
+    <div class="footer">{{ __('export.dicetak_oleh') }} {{ auth()->user()->name }} {{ __('export.pada') }} {{ now()->translatedFormat('d F Y H:i') }} — SISmart v1.0</div>
 </body></html>
