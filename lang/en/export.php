@@ -84,7 +84,7 @@ return [
     'rasio' => 'Ratio',
 
     // ── Excel Headings ──
-    'excel.laporan_stok_title' => 'INVENTORY REPORT - SISmart',
+    'excel.laporan_stok_title' => 'INVENTORY REPORT - Kedana Kedini',
     'excel.laporan_stok_sheet' => 'Stock Report',
     'excel.kode_barang' => 'Item Code',
     'excel.nama_barang' => 'Item Name',
@@ -94,7 +94,7 @@ return [
     'excel.safety_stock' => 'Safety Stock',
     'excel.reorder_point' => 'Reorder Point',
 
-    'excel.masuk_title' => 'STOCK IN REPORT - SISmart',
+    'excel.masuk_title' => 'STOCK IN REPORT - Kedana Kedini',
     'excel.masuk_sheet' => 'Stock In',
     'excel.kode_transaksi' => 'Transaction Code',
     'excel.kode_barang_col' => 'Item Code',
@@ -102,7 +102,7 @@ return [
     'excel.total_harga' => 'Total Price (Rp)',
     'excel.petugas' => 'Officer',
 
-    'excel.keluar_title' => 'STOCK OUT REPORT - SISmart',
+    'excel.keluar_title' => 'STOCK OUT REPORT - Kedana Kedini',
     'excel.keluar_sheet' => 'Stock Out',
     'excel.harga_hpp' => 'COGS Price (Rp)',
     'excel.total_hpp' => 'Total COGS (Rp)',

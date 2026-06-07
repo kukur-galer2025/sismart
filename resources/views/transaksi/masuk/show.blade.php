@@ -44,7 +44,7 @@
                     <span class="text-sm" style="color:var(--text-secondary)">Rp {{ number_format($barangMasuk->harga_satuan, 0, ',', '.') }}</span>
                 </div>
                 <div class="flex justify-between items-center pt-2">
-                    <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Total Nilai</span>
+                    <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Total Nilai / HPP</span>
                     <span class="text-2xl font-bold text-emerald-600 dark:text-emerald-400">Rp {{ number_format($barangMasuk->total_harga, 0, ',', '.') }}</span>
                 </div>
             </div>

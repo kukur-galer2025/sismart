@@ -15,7 +15,7 @@
 </style>
 </head><body>
     <div class="header">
-        <h1>SISmart - Smart Inventory System</h1>
+        <h1>Kedana Kedini - Smart Inventory System</h1>
         <p>{{ __('export.laporan_laba_rugi') }}</p>
         <p>{{ __('export.periode') }}: {{ \Carbon\Carbon::parse($dari)->format('d/m/Y') }} {{ __('export.sd') }} {{ \Carbon\Carbon::parse($sampai)->format('d/m/Y') }}</p>
     </div>
@@ -40,5 +40,5 @@
         <p style="font-size:12px;margin-bottom:5px">{{ $labaRugi >= 0 ? __('export.laba_bersih') : __('export.rugi_bersih') }}</p>
         <p style="font-size:24px;font-weight:bold">Rp {{ number_format(abs($labaRugi),0,',','.') }}</p>
     </div>
-    <div class="footer">{{ __('export.dicetak_oleh') }} {{ auth()->user()->name }} {{ __('export.pada') }} {{ now()->translatedFormat('d F Y H:i') }} — SISmart v1.0</div>
+    <div class="footer">{{ __('export.dicetak_oleh') }} {{ auth()->user()->name }} {{ __('export.pada') }} {{ now()->translatedFormat('d F Y H:i') }} — Kedana Kedini v1.0</div>
 </body></html>

@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="theme-color" :content="darkMode ? '#0f0a2e' : '#f0f2f5'">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>@yield('title', 'Dashboard') - SISmart</title>
+    <title>@yield('title', 'Dashboard') - Kedana Kedini</title>
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -132,7 +132,7 @@
                         <i class="fas fa-boxes-stacked text-white text-lg"></i>
                     </div>
                     <div x-show="sidebarOpen || mobileMenu" x-transition class="overflow-hidden min-w-0">
-                        <h1 class="text-lg font-bold gradient-text leading-tight">SISmart</h1>
+                        <h1 class="text-lg font-bold gradient-text leading-tight">Kedana Kedini</h1>
                         <p class="text-[10px] -mt-0.5" style="color:var(--text-muted)" data-lang="nav.smart_inventory">Smart Inventory</p>
                     </div>
                 </div>
@@ -159,8 +159,10 @@
                             ['laporan.perputaran', 'fas fa-sync-alt', 'nav.perputaran_stok', 'Perputaran Stok', 'laporan.perputaran'],
                         ]],
                         ['nav.keuangan', 'Keuangan', [
+                            ['keuangan.pengeluaran.*', 'fas fa-money-bill-wave text-rose-500', 'nav.pengeluaran', 'Input Pengeluaran', 'keuangan.pengeluaran.create'],
                             ['keuangan.jurnal', 'fas fa-book', 'nav.jurnal_umum', 'Jurnal Umum', 'keuangan.jurnal'],
                             ['keuangan.laba-rugi', 'fas fa-chart-line', 'nav.laba_rugi', 'Laba Rugi', 'keuangan.laba-rugi'],
+                            ['keuangan.perubahan-modal', 'fas fa-chart-pie', 'nav.perubahan_modal', 'Perubahan Modal', 'keuangan.perubahan-modal'],
                             ['keuangan.neraca', 'fas fa-balance-scale', 'nav.neraca', 'Neraca', 'keuangan.neraca'],
                         ]],
                         ['nav.bantuan', 'Bantuan', [

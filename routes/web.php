@@ -48,7 +48,10 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('keuangan')->name('keuangan.')->group(function () {
         Route::get('/laba-rugi', [KeuanganController::class, 'labaRugi'])->name('laba-rugi');
+        Route::get('/perubahan-modal', [KeuanganController::class, 'perubahanModal'])->name('perubahan-modal');
         Route::get('/neraca', [KeuanganController::class, 'neraca'])->name('neraca');
+        Route::get('/pengeluaran', [\App\Http\Controllers\PengeluaranController::class, 'create'])->name('pengeluaran.create');
+        Route::post('/pengeluaran', [\App\Http\Controllers\PengeluaranController::class, 'store'])->name('pengeluaran.store');
         Route::get('/jurnal', [KeuanganController::class, 'jurnal'])->name('jurnal');
     });
 

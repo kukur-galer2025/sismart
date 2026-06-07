@@ -54,9 +54,13 @@ class DatabaseSeeder extends Seeder
             ['kode'=>'1-200','nama'=>'Piutang Usaha','tipe'=>'aset','saldo_normal'=>'debit','saldo'=>0],
             ['kode'=>'2-000','nama'=>'Hutang Usaha','tipe'=>'kewajiban','saldo_normal'=>'kredit','saldo'=>0],
             ['kode'=>'3-000','nama'=>'Modal','tipe'=>'ekuitas','saldo_normal'=>'kredit','saldo'=>759530000],
+            ['kode'=>'3-100','nama'=>'Prive','tipe'=>'ekuitas','saldo_normal'=>'debit','saldo'=>0],
             ['kode'=>'4-000','nama'=>'Pendapatan Penjualan','tipe'=>'pendapatan','saldo_normal'=>'kredit','saldo'=>0],
             ['kode'=>'5-100','nama'=>'Harga Pokok Penjualan','tipe'=>'beban','saldo_normal'=>'debit','saldo'=>0],
             ['kode'=>'5-200','nama'=>'Beban Operasional','tipe'=>'beban','saldo_normal'=>'debit','saldo'=>0],
+            ['kode'=>'5-300','nama'=>'Beban Listrik','tipe'=>'beban','saldo_normal'=>'debit','saldo'=>0],
+            ['kode'=>'5-400','nama'=>'Beban Air','tipe'=>'beban','saldo_normal'=>'debit','saldo'=>0],
+            ['kode'=>'5-500','nama'=>'Beban Gaji Karyawan','tipe'=>'beban','saldo_normal'=>'debit','saldo'=>0],
         ];
         foreach ($akuns as $akun) {
             AkunKeuangan::create($akun);

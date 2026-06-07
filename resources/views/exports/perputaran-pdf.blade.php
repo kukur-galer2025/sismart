@@ -14,7 +14,7 @@
 </style>
 </head><body>
     <div class="header">
-        <h1>SISmart - Smart Inventory System</h1>
+        <h1>Kedana Kedini - Smart Inventory System</h1>
         <p>{{ __('export.laporan_perputaran') }}</p>
         <p>{{ __('export.per_tanggal') }}: {{ now()->translatedFormat('d F Y') }}</p>
     </div>
@@ -27,5 +27,5 @@
             @endforelse
         </tbody>
     </table>
-    <div class="footer">{{ __('export.dicetak_oleh') }} {{ auth()->user()->name }} {{ __('export.pada') }} {{ now()->translatedFormat('d F Y H:i') }} — SISmart v1.0</div>
+    <div class="footer">{{ __('export.dicetak_oleh') }} {{ auth()->user()->name }} {{ __('export.pada') }} {{ now()->translatedFormat('d F Y H:i') }} — Kedana Kedini v1.0</div>
 </body></html>

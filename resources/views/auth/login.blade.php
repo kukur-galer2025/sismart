@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Login — SISmart</title>
+    <title>Login — Kedana Kedini</title>
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -165,7 +165,7 @@
                 </div>
             </div>
 
-            <p style="margin-top:3rem;font-size:.7rem;color:rgba(255,255,255,.3);letter-spacing:1px">&copy; {{ date('Y') }} SISmart — All rights reserved</p>
+            <p style="margin-top:3rem;font-size:.7rem;color:rgba(255,255,255,.3);letter-spacing:1px">&copy; {{ date('Y') }} Kedana Kedini — All rights reserved</p>
         </div>
     </div>
 
@@ -189,7 +189,7 @@
                     <i class="fas fa-boxes-stacked" style="color:#fff;font-size:22px"></i>
                 </div>
                 <h1 style="font-size:24px;font-weight:800">
-                    <span style="background:linear-gradient(135deg,#6366f1,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent">SISmart</span>
+                    <span style="background:linear-gradient(135deg,#6366f1,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Kedana Kedini</span>
                 </h1>
                 <p class="sub-text" style="font-size:13px;margin-top:4px">Smart Inventory System</p>
             </div>
@@ -240,7 +240,7 @@
 
             <div class="sep" style="margin-top:2rem;padding-top:1.25rem">
                 <p class="foot-text" style="text-align:center;font-size:11px;display:flex;align-items:center;justify-content:center;gap:6px">
-                    <i class="fas fa-shield-halved" style="opacity:.6"></i> SISmart v1.0 &copy; {{ date('Y') }}
+                    <i class="fas fa-shield-halved" style="opacity:.6"></i> Kedana Kedini v1.0 &copy; {{ date('Y') }}
                 </p>
             </div>
         </div>

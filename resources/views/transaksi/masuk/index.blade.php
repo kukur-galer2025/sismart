@@ -8,6 +8,12 @@
             <input type="date" name="dari" value="{{ request('dari') }}" class="form-input !w-[120px] !py-1.5 !text-[11px]">
             <span class="text-[10px] hidden sm:inline" style="color:var(--text-muted)" data-lang="common.sd">s/d</span>
             <input type="date" name="sampai" value="{{ request('sampai') }}" class="form-input !w-[120px] !py-1.5 !text-[11px]">
+            <select onchange="if(this.value){ let d=new Date(), s=new Date(); if(this.value==='7d')s.setDate(d.getDate()-7); if(this.value==='1m')s.setMonth(d.getMonth()-1); if(this.value==='1y')s.setFullYear(d.getFullYear()-1); let f=this.closest('form'); f.dari.value=s.toISOString().split('T')[0]; f.sampai.value=d.toISOString().split('T')[0]; f.submit(); }" class="form-input !w-auto !py-1.5 !text-[11px] font-medium cursor-pointer" style="color:var(--text-secondary)">
+                <option value="" data-lang="filter.preset">Pilih Periode...</option>
+                <option value="7d" data-lang="filter.7d">7 Hari Terakhir</option>
+                <option value="1m" data-lang="filter.1m">1 Bulan Terakhir</option>
+                <option value="1y" data-lang="filter.1y">1 Tahun Terakhir</option>
+            </select>
             <button type="submit" class="btn-primary !text-[11px] !py-1.5 !px-2.5"><i class="fas fa-filter"></i> <span data-lang="common.filter">Filter</span></button>
             @if(request()->anyFilled(['search','dari','sampai']))<a href="{{ route('barang-masuk.index') }}" class="btn-outline !text-[11px] !py-1.5 !px-2.5"><i class="fas fa-times"></i> <span data-lang="common.reset">Reset</span></a>@endif
         </form>
@@ -27,7 +33,7 @@
             </div>
             <div class="flex items-center justify-between text-xs">
                 <span style="color:var(--text-muted)">{{ $trx->supplier ?? '-' }}</span>
-                <span class="text-emerald-600 dark:text-emerald-400 font-bold">+{{ number_format($trx->jumlah) }} → Rp {{ number_format($trx->total_harga,0,',','.') }}</span>
+                <span class="text-emerald-600 dark:text-emerald-400 font-bold">+{{ number_format($trx->jumlah) }} &rarr; HPP: Rp {{ number_format($trx->total_harga,0,',','.') }}</span>
             </div>
         </a>
         @empty
@@ -44,7 +50,7 @@
                     <th class="px-5 py-3 text-[11px] font-semibold uppercase tracking-wider" style="color:var(--text-muted)">Barang</th>
                     <th class="px-5 py-3 text-[11px] font-semibold uppercase tracking-wider hidden lg:table-cell" style="color:var(--text-muted)">Supplier</th>
                     <th class="px-5 py-3 text-[11px] font-semibold uppercase tracking-wider text-right" style="color:var(--text-muted)">Jumlah</th>
-                    <th class="px-5 py-3 text-[11px] font-semibold uppercase tracking-wider text-right" style="color:var(--text-muted)">Total Harga</th>
+                    <th class="px-5 py-3 text-[11px] font-semibold uppercase tracking-wider text-right" style="color:var(--text-muted)">Total Nilai / HPP</th>
                     <th class="px-5 py-3 text-[11px] font-semibold uppercase tracking-wider text-center" style="color:var(--text-muted)">Aksi</th>
                 </tr></thead>
                 <tbody>

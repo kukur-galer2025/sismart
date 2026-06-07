@@ -15,7 +15,7 @@
 </style>
 </head><body>
     <div class="header">
-        <h1>SISmart - Smart Inventory System</h1>
+        <h1>Kedana Kedini - Smart Inventory System</h1>
         <p>{{ __('export.laporan_neraca') }}</p>
         <p>{{ __('export.per_tanggal') }} {{ \Carbon\Carbon::parse($tanggal)->translatedFormat('d F Y') }}</p>
     </div>
@@ -49,5 +49,5 @@
     <div class="balance-box" style="background:{{ abs($totalAset-($totalKewajiban+$totalEkuitas)) < 1 ? '#f0fdf4;color:#059669;border:2px solid #a7f3d0' : '#fef2f2;color:#dc2626;border:2px solid #fecaca' }}">
         {{ abs($totalAset-($totalKewajiban+$totalEkuitas)) < 1 ? __('export.seimbang') : __('export.tidak_seimbang').number_format(abs($totalAset-($totalKewajiban+$totalEkuitas)),0,',','.') }}
     </div>
-    <div class="footer">{{ __('export.dicetak_oleh') }} {{ auth()->user()->name }} {{ __('export.pada') }} {{ now()->translatedFormat('d F Y H:i') }} — SISmart v1.0</div>
+    <div class="footer">{{ __('export.dicetak_oleh') }} {{ auth()->user()->name }} {{ __('export.pada') }} {{ now()->translatedFormat('d F Y H:i') }} — Kedana Kedini v1.0</div>
 </body></html>

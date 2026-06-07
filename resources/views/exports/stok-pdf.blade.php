@@ -23,7 +23,7 @@
     </style>
 </head><body>
     <div class="header">
-        <h1>SISmart - Smart Inventory System</h1>
+        <h1>Kedana Kedini - Smart Inventory System</h1>
         <p>{{ __('export.laporan_persediaan') }}</p>
         <p>{{ __('export.tanggal') }}: {{ now()->translatedFormat('d F Y') }}</p>
     </div>
@@ -51,5 +51,5 @@
             <tr class="total-row"><td colspan="8" class="text-right">{{ __('export.grand_total') }}</td><td class="text-right">Rp {{ number_format($totalNilai,0,',','.') }}</td><td></td></tr>
         </tbody>
     </table>
-    <div class="footer">{{ __('export.dicetak_oleh') }} {{ auth()->user()->name }} {{ __('export.pada') }} {{ now()->translatedFormat('d F Y H:i') }} — SISmart v1.0</div>
+    <div class="footer">{{ __('export.dicetak_oleh') }} {{ auth()->user()->name }} {{ __('export.pada') }} {{ now()->translatedFormat('d F Y H:i') }} — Kedana Kedini v1.0</div>
 </body></html>

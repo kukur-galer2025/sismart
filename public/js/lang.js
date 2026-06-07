@@ -90,7 +90,11 @@ const SISMART_LANG = {
         'common.kembali': 'Kembali',
         'common.cari': 'Cari',
         'common.filter': 'Filter',
-        'common.cetak': 'Cetak',
+        'common.reset': 'Reset',
+        'filter.preset': 'Pilih Periode...',
+        'filter.7d': '7 Hari Terakhir',
+        'filter.1m': '1 Bulan Terakhir',
+        'filter.1y': '1 Tahun Terakhir',
         'common.lihat': 'Lihat',
         'common.aksi': 'Aksi',
         'common.detail': 'Detail',
@@ -274,7 +278,7 @@ const SISMART_LANG = {
 
         // ── Keuangan: Laba Rugi ──
         'labarugi.title': 'Laporan Laba Rugi',
-        'labarugi.heading': 'SISmart — Laporan Laba Rugi',
+        'labarugi.heading': 'Kedana Kedini — Laporan Laba Rugi',
         'labarugi.pendapatan': 'Pendapatan',
         'labarugi.beban': 'Beban',
         'labarugi.total_pendapatan': 'Total Pendapatan',
@@ -288,7 +292,7 @@ const SISMART_LANG = {
         // ── Keuangan: Neraca ──
         'neraca.title': 'Neraca',
         'neraca.heading': 'Neraca (Balance Sheet)',
-        'neraca.sismart_heading': 'SISmart — Neraca',
+        'neraca.sismart_heading': 'Kedana Kedini — Neraca',
         'neraca.aset': 'ASET (AKTIVA)',
         'neraca.kewajiban': 'KEWAJIBAN',
         'neraca.ekuitas': 'EKUITAS (MODAL)',
@@ -407,7 +411,11 @@ const SISMART_LANG = {
         'common.kembali': 'Back',
         'common.cari': 'Search',
         'common.filter': 'Filter',
-        'common.cetak': 'Print',
+        'common.reset': 'Reset',
+        'filter.preset': 'Select Period...',
+        'filter.7d': 'Last 7 Days',
+        'filter.1m': 'Last 1 Month',
+        'filter.1y': 'Last 1 Year',
         'common.lihat': 'View',
         'common.aksi': 'Actions',
         'common.detail': 'Detail',
@@ -591,7 +599,7 @@ const SISMART_LANG = {
 
         // ── Keuangan: Laba Rugi ──
         'labarugi.title': 'Income Statement',
-        'labarugi.heading': 'SISmart — Income Statement',
+        'labarugi.heading': 'Kedana Kedini — Income Statement',
         'labarugi.pendapatan': 'Revenue',
         'labarugi.beban': 'Expenses',
         'labarugi.total_pendapatan': 'Total Revenue',
@@ -605,7 +613,7 @@ const SISMART_LANG = {
         // ── Keuangan: Neraca ──
         'neraca.title': 'Balance Sheet',
         'neraca.heading': 'Balance Sheet',
-        'neraca.sismart_heading': 'SISmart — Balance Sheet',
+        'neraca.sismart_heading': 'Kedana Kedini — Balance Sheet',
         'neraca.aset': 'ASSETS',
         'neraca.kewajiban': 'LIABILITIES',
         'neraca.ekuitas': 'EQUITY',

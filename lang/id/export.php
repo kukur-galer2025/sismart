@@ -84,7 +84,7 @@ return [
     'rasio' => 'Rasio',
 
     // ── Excel Headings ──
-    'excel.laporan_stok_title' => 'LAPORAN PERSEDIAAN BARANG - SISmart',
+    'excel.laporan_stok_title' => 'LAPORAN PERSEDIAAN BARANG - Kedana Kedini',
     'excel.laporan_stok_sheet' => 'Laporan Stok',
     'excel.kode_barang' => 'Kode Barang',
     'excel.nama_barang' => 'Nama Barang',
@@ -94,7 +94,7 @@ return [
     'excel.safety_stock' => 'Safety Stock',
     'excel.reorder_point' => 'Reorder Point',
 
-    'excel.masuk_title' => 'LAPORAN BARANG MASUK - SISmart',
+    'excel.masuk_title' => 'LAPORAN BARANG MASUK - Kedana Kedini',
     'excel.masuk_sheet' => 'Barang Masuk',
     'excel.kode_transaksi' => 'Kode Transaksi',
     'excel.kode_barang_col' => 'Kode Barang',
@@ -102,7 +102,7 @@ return [
     'excel.total_harga' => 'Total Harga (Rp)',
     'excel.petugas' => 'Petugas',
 
-    'excel.keluar_title' => 'LAPORAN BARANG KELUAR - SISmart',
+    'excel.keluar_title' => 'LAPORAN BARANG KELUAR - Kedana Kedini',
     'excel.keluar_sheet' => 'Barang Keluar',
     'excel.harga_hpp' => 'Harga HPP (Rp)',
     'excel.total_hpp' => 'Total HPP (Rp)',
