@@ -38,7 +38,7 @@
                         <input type="number" name="jumlah" x-model.number="jumlah" required min="1" class="form-input">
                     </div>
                     <div>
-                        <label class="form-label"><i class="fas fa-tag text-indigo-500"></i> Harga Satuan (Rp) <span class="text-rose-500">*</span></label>
+                        <label class="form-label"><i class="fas fa-tag text-indigo-500"></i> Harga Beli / HPP Satuan (Rp) <span class="text-rose-500">*</span></label>
                         <input type="number" name="harga_satuan" x-model.number="hargaSatuan" required min="0" step="0.01" class="form-input">
                     </div>
                     <div class="pt-4 mt-4 border-t" style="border-color:var(--border-color)">
