@@ -110,7 +110,7 @@
                 <div class="table-responsive">
                     <table class="w-full text-sm text-left">
                         <thead class="text-xs uppercase" style="color:var(--text-muted); background:var(--bg-input)">
-                            <tr><th class="px-5 py-3">Tanggal Masuk</th><th class="px-5 py-3">Harga Satuan</th><th class="px-5 py-3 text-right">Sisa Stok</th><th class="px-5 py-3 text-right">Nilai</th></tr>
+                            <tr><th class="px-5 py-3">Tanggal Masuk</th><th class="px-5 py-3">Harga Beli (HPP)</th><th class="px-5 py-3 text-right">Sisa Stok</th><th class="px-5 py-3 text-right">Nilai</th></tr>
                         </thead>
                         <tbody class="divide-y" style="border-color:var(--border-color)">
                             @forelse($barang->batches as $batch)

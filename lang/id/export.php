@@ -50,7 +50,7 @@ return [
     'jumlah' => 'Jumlah',
     'total_rp' => 'Total (Rp)',
     'total_hpp' => 'Total HPP (Rp)',
-    'harga_satuan' => 'Harga Satuan',
+    'harga_satuan' => 'Harga Beli (HPP)',
 
     // ── Jurnal PDF ──
     'akun' => 'Akun',
@@ -98,7 +98,8 @@ return [
     'excel.masuk_sheet' => 'Barang Masuk',
     'excel.kode_transaksi' => 'Kode Transaksi',
     'excel.kode_barang_col' => 'Kode Barang',
-    'excel.harga_satuan' => 'Harga Satuan (Rp)',
+    'excel.jumlah' => 'Jumlah',
+    'excel.harga_satuan' => 'Harga Beli (HPP)',
     'excel.total_harga' => 'Total Harga (Rp)',
     'excel.petugas' => 'Petugas',
 

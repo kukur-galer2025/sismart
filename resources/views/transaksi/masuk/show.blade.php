@@ -39,9 +39,9 @@
                     <span class="text-sm" style="color:var(--text-muted)">Jumlah Masuk</span>
                     <span class="text-lg font-bold">{{ number_format($barangMasuk->jumlah) }} {{ $barangMasuk->barang->satuan }}</span>
                 </div>
-                <div class="flex justify-between items-center pb-3 border-b border-emerald-500/10">
-                    <span class="text-sm" style="color:var(--text-muted)">Harga Satuan</span>
-                    <span class="text-sm" style="color:var(--text-secondary)">Rp {{ number_format($barangMasuk->harga_satuan, 0, ',', '.') }}</span>
+                <div class="space-y-1">
+                    <span class="text-sm" style="color:var(--text-muted)">Harga Beli (HPP)</span>
+                    <p class="font-bold text-lg text-emerald-600 dark:text-emerald-400">Rp {{ number_format($barangMasuk->harga_satuan, 0, ',', '.') }}</p>
                 </div>
                 <div class="flex justify-between items-center pt-2">
                     <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Total Nilai / HPP</span>
