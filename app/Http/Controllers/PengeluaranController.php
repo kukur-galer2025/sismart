@@ -44,8 +44,11 @@ class PengeluaranController extends Controller
             $akunBeban = AkunKeuangan::findOrFail($request->akun_id);
             $akunKas = AkunKeuangan::where('kode', '1-000')->firstOrFail();
 
+            $kodeJurnal = JurnalEntry::generateKode();
+            
             // Create journal for Expense/Prive (Debit)
             JurnalEntry::create([
+                'kode_jurnal' => $kodeJurnal,
                 'akun_id' => $akunBeban->id,
                 'tanggal' => $request->tanggal,
                 'keterangan' => $request->keterangan,
@@ -56,6 +59,7 @@ class PengeluaranController extends Controller
 
             // Create journal for Kas (Credit)
             JurnalEntry::create([
+                'kode_jurnal' => $kodeJurnal,
                 'akun_id' => $akunKas->id,
                 'tanggal' => $request->tanggal,
                 'keterangan' => $request->keterangan,
