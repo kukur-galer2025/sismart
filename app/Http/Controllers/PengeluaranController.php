@@ -73,6 +73,6 @@ class PengeluaranController extends Controller
             $akunKas->decrement('saldo', $request->nominal);
         });
 
-        return redirect()->route('pengeluaran.create')->with('success', 'Pengeluaran berhasil dicatat!');
+        return redirect()->route('keuangan.pengeluaran.create')->with('success', 'Pengeluaran berhasil dicatat!');
     }
 }

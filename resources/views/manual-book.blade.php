@@ -62,8 +62,14 @@
             
             <div class="space-y-4">
                 <div class="p-4 rounded-xl border transition-colors hover:border-amber-500/30" style="background:var(--bg-input);border-color:var(--border-color)">
-                    <h4 class="font-bold text-sm mb-1" style="color:var(--text-primary)">Safety Stock & Reorder Point</h4>
-                    <p class="text-[11px] mb-2 leading-relaxed" style="color:var(--text-secondary)">Sistem menggunakan perhitungan persediaan modern untuk menentukan kapan Anda harus memesan barang dan berapa batas amannya.</p>
+                    <h4 class="font-bold text-sm mb-1" style="color:var(--text-primary)">Safety Stock, Reorder Point, & Lead Time</h4>
+                    <p class="text-[11px] mb-3 leading-relaxed" style="color:var(--text-secondary)">
+                        Sistem menggunakan perhitungan persediaan modern untuk menentukan kapan Anda harus memesan barang dan berapa batas amannya. Terdapat 3 komponen penting dalam perhitungan ini:
+                    </p>
+                    <div class="mb-3 p-3 rounded-lg border text-[11px] leading-relaxed" style="background:var(--bg-sidebar);border-color:var(--border-color);color:var(--text-primary)">
+                        <b>Lead Time (Waktu Tunggu):</b><br>
+                        Adalah jeda waktu (dalam hari) sejak Anda memesan barang ke Supplier hingga barang tersebut tiba di gudang. Nilai Lead Time sangat memengaruhi perhitungan batas aman stok. Jika Lead Time panjang, Anda butuh stok pengaman lebih banyak.
+                    </div>
                     <div class="space-y-2">
                         <div class="p-2 rounded text-xs font-mono font-bold flex gap-2 items-center" style="background:var(--bg-sidebar);color:var(--text-primary);border:1px solid var(--border-color)">
                             <span class="text-amber-500">SS =</span> (Pemakaian Maksimum - Pemakaian Rata-rata) × Lead Time
