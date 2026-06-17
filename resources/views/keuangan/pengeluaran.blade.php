@@ -54,6 +54,7 @@
                         <th class="px-4 py-3 text-[11px] font-semibold uppercase" style="color:var(--text-muted)">Akun</th>
                         <th class="px-4 py-3 text-[11px] font-semibold uppercase" style="color:var(--text-muted)">Keterangan</th>
                         <th class="px-4 py-3 text-[11px] font-semibold uppercase text-right" style="color:var(--text-muted)">Nominal</th>
+                        <th class="px-4 py-3 text-[11px] font-semibold uppercase text-center" style="color:var(--text-muted)">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -63,6 +64,13 @@
                         <td class="px-4 py-3 font-medium">{{ $item->akun->nama }}</td>
                         <td class="px-4 py-3" style="color:var(--text-secondary)">{{ $item->keterangan }}</td>
                         <td class="px-4 py-3 text-right text-rose-600 dark:text-rose-400 font-bold">Rp {{ number_format($item->debit, 0, ',', '.') }}</td>
+                        <td class="px-4 py-3 text-center">
+                            <form action="{{ route('keuangan.pengeluaran.destroy', $item->kode_jurnal) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini? Saldo kas akan dikembalikan.');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-rose-500 hover:text-rose-700 transition-colors" title="Hapus"><i class="fas fa-trash-alt"></i></button>
+                            </form>
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>

@@ -6,7 +6,7 @@
         <i class="fas fa-arrow-left"></i> Kembali ke Daftar Barang
     </a>
 
-    <div class="glass rounded-2xl p-5 sm:p-8">
+    <div class="glass rounded-2xl p-5 sm:p-8" x-data="{ stokAwal: {{ old('stok_awal', 0) }} }">
         <form action="{{ route('barang.store') }}" method="POST" class="space-y-6">
             @csrf
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -36,6 +36,24 @@
                     <div>
                         <label class="form-label"><i class="fas fa-map-marker-alt text-indigo-500"></i> Lokasi Penyimpanan</label>
                         <input type="text" name="lokasi" value="{{ old('lokasi') }}" class="form-input" placeholder="Rak A1, Gudang Utama">
+                    </div>
+                    
+                    <div class="p-4 rounded-xl border mt-2" style="background:var(--bg-sidebar); border-color:var(--border-color)">
+                        <div class="flex items-center gap-2 mb-3">
+                            <i class="fas fa-box-open text-emerald-500"></i>
+                            <span class="font-semibold text-sm">Input Stok Awal (Opsional)</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="form-label text-xs">Jumlah Stok</label>
+                                <input type="number" name="stok_awal" x-model.number="stokAwal" min="0" class="form-input text-sm">
+                            </div>
+                            <div x-show="stokAwal > 0" x-transition>
+                                <label class="form-label text-xs">Harga Modal (HPP) / Satuan</label>
+                                <input type="number" name="harga_modal_awal" value="{{ old('harga_modal_awal') }}" min="0" class="form-input text-sm" :required="stokAwal > 0">
+                            </div>
+                        </div>
+                        <p class="text-[10px] mt-2 text-emerald-600 dark:text-emerald-400" x-show="stokAwal > 0"><i class="fas fa-info-circle"></i> Stok awal akan otomatis dicatat sebagai transaksi Barang Masuk pertama.</p>
                     </div>
                 </div>
 

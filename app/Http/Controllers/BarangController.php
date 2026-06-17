@@ -4,10 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Barang;
 use App\Models\Kategori;
+use App\Services\InventoryService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BarangController extends Controller
 {
+    public function __construct(private InventoryService $inventoryService) {}
+
     public function index(Request $request)
     {
         $query = Barang::with('kategori');
@@ -59,9 +63,28 @@ class BarangController extends Controller
             'metode_stok' => 'required|in:fifo,average',
             'lokasi' => 'nullable|string|max:255',
             'keterangan' => 'nullable|string',
+            'stok_awal' => 'nullable|integer|min:0',
+            'harga_modal_awal' => 'nullable|numeric|min:0',
         ]);
 
-        Barang::create($validated);
+        DB::transaction(function () use ($validated) {
+            $barang = Barang::create(\Illuminate\Support\Arr::except($validated, ['stok_awal', 'harga_modal_awal']));
+
+            if (!empty($validated['stok_awal']) && $validated['stok_awal'] > 0) {
+                if (empty($validated['harga_modal_awal'])) {
+                    throw new \Exception('Harga Modal Awal harus diisi jika Stok Awal lebih dari 0.');
+                }
+                
+                // Catat stok awal sebagai transaksi Barang Masuk pertama
+                $this->inventoryService->prosesBarangMasuk([
+                    'barang_id' => $barang->id,
+                    'tanggal' => now()->format('Y-m-d'),
+                    'jumlah' => $validated['stok_awal'],
+                    'harga_satuan' => $validated['harga_modal_awal'],
+                    'keterangan' => 'Pencatatan Stok Awal Persediaan',
+                ]);
+            }
+        });
 
         return redirect()->route('barang.index')
             ->with('success', 'Barang berhasil ditambahkan!');

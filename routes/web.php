@@ -52,6 +52,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/neraca', [KeuanganController::class, 'neraca'])->name('neraca');
         Route::get('/pengeluaran', [\App\Http\Controllers\PengeluaranController::class, 'create'])->name('pengeluaran.create');
         Route::post('/pengeluaran', [\App\Http\Controllers\PengeluaranController::class, 'store'])->name('pengeluaran.store');
+        Route::delete('/pengeluaran/{kode_jurnal}', [\App\Http\Controllers\PengeluaranController::class, 'destroy'])->name('pengeluaran.destroy');
         Route::get('/jurnal', [KeuanganController::class, 'jurnal'])->name('jurnal');
     });
 

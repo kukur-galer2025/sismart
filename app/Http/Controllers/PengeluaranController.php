@@ -75,4 +75,33 @@ class PengeluaranController extends Controller
 
         return redirect()->route('keuangan.pengeluaran.create')->with('success', 'Pengeluaran berhasil dicatat!');
     }
+
+    public function destroy($kode_jurnal)
+    {
+        DB::transaction(function () use ($kode_jurnal) {
+            $jurnals = JurnalEntry::where('kode_jurnal', $kode_jurnal)->get();
+            
+            if ($jurnals->isEmpty()) {
+                throw new \Exception('Data jurnal tidak ditemukan.');
+            }
+
+            foreach ($jurnals as $jurnal) {
+                $akun = AkunKeuangan::find($jurnal->akun_id);
+                if ($akun) {
+                    // Reverse the balances
+                    if ($jurnal->debit > 0) {
+                        // If it was debited (e.g. Expense increased), we decrease it
+                        $akun->decrement('saldo', $jurnal->debit);
+                    }
+                    if ($jurnal->kredit > 0) {
+                        // If it was credited (e.g. Kas decreased), we increase it
+                        $akun->increment('saldo', $jurnal->kredit);
+                    }
+                }
+                $jurnal->delete();
+            }
+        });
+
+        return redirect()->route('keuangan.pengeluaran.create')->with('success', 'Data pengeluaran berhasil dihapus dan saldo telah dikembalikan!');
+    }
 }
