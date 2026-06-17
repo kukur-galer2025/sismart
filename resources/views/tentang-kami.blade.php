@@ -13,10 +13,10 @@
     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
         @php
             $team = [
-                ['name' => 'Vita Fauztina Zabrina', 'nim' => '2402030041', 'role' => 'Anggota Kelompok', 'color' => 'from-pink-500 to-rose-500', 'icon' => 'fa-laptop-code'],
-                ['name' => 'Zahva Bunga Khoirunnisa', 'nim' => '2402030044', 'role' => 'Anggota Kelompok', 'color' => 'from-purple-500 to-indigo-500', 'icon' => 'fa-palette'],
-                ['name' => 'Lutfia Nur Solihah', 'nim' => '2402030047', 'role' => 'Anggota Kelompok', 'color' => 'from-emerald-500 to-teal-500', 'icon' => 'fa-database'],
-                ['name' => 'Widya Kumalasari', 'nim' => '2402030115', 'role' => 'Anggota Kelompok', 'color' => 'from-amber-500 to-orange-500', 'icon' => 'fa-bug'],
+                ['name' => 'Vita Fauztina Zabrina', 'nim' => '2402030041', 'role' => 'Anggota Kelompok', 'color' => 'from-pink-500 to-rose-500', 'icon' => 'fa-laptop-code', 'image' => 'vita.webp'],
+                ['name' => 'Zahva Bunga Khoirunnisa', 'nim' => '2402030044', 'role' => 'Anggota Kelompok', 'color' => 'from-purple-500 to-indigo-500', 'icon' => 'fa-palette', 'image' => 'zahva.webp'],
+                ['name' => 'Lutfia Nur Solihah', 'nim' => '2402030047', 'role' => 'Anggota Kelompok', 'color' => 'from-emerald-500 to-teal-500', 'icon' => 'fa-database', 'image' => 'lutfia.webp'],
+                ['name' => 'Widya Kumalasari', 'nim' => '2402030115', 'role' => 'Anggota Kelompok', 'color' => 'from-amber-500 to-orange-500', 'icon' => 'fa-bug', 'image' => 'widya.webp'],
             ];
         @endphp
 
@@ -25,8 +25,12 @@
             <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br {{ $member['color'] }} rounded-bl-full opacity-10 transition-opacity group-hover:opacity-20 -z-10"></div>
             
             <div class="flex flex-col items-center text-center">
-                <div class="w-24 h-24 rounded-full mb-4 flex items-center justify-center bg-gradient-to-br {{ $member['color'] }} text-white shadow-lg relative z-10">
-                    <span class="text-3xl font-bold">{{ substr($member['name'], 0, 1) }}</span>
+                <div class="w-24 h-24 rounded-full mb-4 flex items-center justify-center bg-gradient-to-br {{ $member['color'] }} text-white shadow-lg relative z-10 overflow-hidden">
+                    @if(isset($member['image']))
+                        <img src="{{ asset('images/' . $member['image']) }}" alt="{{ $member['name'] }}" class="w-full h-full object-cover">
+                    @else
+                        <span class="text-3xl font-bold">{{ substr($member['name'], 0, 1) }}</span>
+                    @endif
                     <div class="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-white dark:bg-slate-800 text-sm flex items-center justify-center shadow" style="color:var(--text-primary)">
                         <i class="fas {{ $member['icon'] }} opacity-80"></i>
                     </div>
