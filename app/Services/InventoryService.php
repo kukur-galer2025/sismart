@@ -87,6 +87,9 @@ class InventoryService
                 $totalHarga = $jumlah * $hargaSatuan;
             }
 
+            $hargaJualSatuan = isset($data['harga_jual_satuan']) && $data['harga_jual_satuan'] > 0 ? $data['harga_jual_satuan'] : null;
+            $totalJual = $hargaJualSatuan ? ($hargaJualSatuan * $jumlah) : null;
+
             // Create transaction record
             $keluar = BarangKeluar::create([
                 'kode_transaksi' => BarangKeluar::generateKode(),
@@ -96,6 +99,8 @@ class InventoryService
                 'jumlah' => $jumlah,
                 'harga_satuan' => round($hargaSatuan, 2),
                 'total_harga' => round($totalHarga, 2),
+                'harga_jual_satuan' => $hargaJualSatuan,
+                'total_jual' => $totalJual,
                 'tujuan' => $data['tujuan'] ?? null,
                 'keterangan' => $data['keterangan'] ?? null,
             ]);
@@ -119,6 +124,11 @@ class InventoryService
 
             // Create journal entries (Debit: HPP/Beban, Kredit: Persediaan)
             $this->catatJurnalKeluar($keluar, round($totalHarga, 2));
+
+            // Create journal entries for Sales if it's a sale
+            if ($totalJual && $totalJual > 0) {
+                $this->catatJurnalPenjualan($keluar, $totalJual);
+            }
 
             return $keluar;
         });
@@ -242,6 +252,49 @@ class InventoryService
             // Update account balances
             $akunHPP->increment('saldo', $total);
             $akunPersediaan->decrement('saldo', $total);
+        }
+    }
+
+    /**
+     * Record journal entry for sales revenue
+     */
+    private function catatJurnalPenjualan(BarangKeluar $keluar, float $totalJual): void
+    {
+        $kodeJurnal = JurnalEntry::generateKode();
+
+        // Debit: Kas (Asset account - increase)
+        $akunKas = AkunKeuangan::where('kode', '1-000')->first();
+        // Kredit: Pendapatan Penjualan (Revenue account)
+        $akunPendapatan = AkunKeuangan::where('kode', '4-000')->first();
+
+        if ($akunKas && $akunPendapatan) {
+            JurnalEntry::create([
+                'kode_jurnal' => $kodeJurnal,
+                'tanggal' => $keluar->tanggal,
+                'akun_id' => $akunKas->id,
+                'debit' => $totalJual,
+                'kredit' => 0,
+                'keterangan' => "Penjualan: {$keluar->barang->nama}",
+                'referensi_tipe' => 'barang_keluar',
+                'referensi_id' => $keluar->id,
+                'user_id' => auth()->id(),
+            ]);
+
+            JurnalEntry::create([
+                'kode_jurnal' => $kodeJurnal,
+                'tanggal' => $keluar->tanggal,
+                'akun_id' => $akunPendapatan->id,
+                'debit' => 0,
+                'kredit' => $totalJual,
+                'keterangan' => "Penjualan: {$keluar->barang->nama}",
+                'referensi_tipe' => 'barang_keluar',
+                'referensi_id' => $keluar->id,
+                'user_id' => auth()->id(),
+            ]);
+
+            // Update account balances
+            $akunKas->increment('saldo', $totalJual);
+            $akunPendapatan->increment('saldo', $totalJual);
         }
     }
 }

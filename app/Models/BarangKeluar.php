@@ -9,7 +9,7 @@ class BarangKeluar extends Model
 {
     protected $fillable = [
         'kode_transaksi', 'barang_id', 'user_id', 'tanggal',
-        'jumlah', 'harga_satuan', 'total_harga', 'tujuan', 'keterangan',
+        'jumlah', 'harga_satuan', 'total_harga', 'harga_jual_satuan', 'total_jual', 'tujuan', 'keterangan',
     ];
 
     protected function casts(): array
@@ -18,6 +18,8 @@ class BarangKeluar extends Model
             'tanggal' => 'date',
             'harga_satuan' => 'decimal:2',
             'total_harga' => 'decimal:2',
+            'harga_jual_satuan' => 'decimal:2',
+            'total_jual' => 'decimal:2',
         ];
     }
 

@@ -7,6 +7,17 @@
     </a>
 
     <div class="glass rounded-2xl p-5 sm:p-8" x-data="{ stokAwal: {{ old('stok_awal', 0) }} }">
+        <div class="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 flex items-start gap-4 mb-6">
+            <div class="w-11 h-11 rounded-xl bg-amber-500/20 flex items-center justify-center text-amber-600 dark:text-amber-400 shrink-0 mt-0.5"><i class="fas fa-exclamation-triangle text-lg"></i></div>
+            <div>
+                <h3 class="text-amber-700 dark:text-amber-400 font-bold text-sm">PERHATIAN: Hanya Untuk Barang Jenis Baru!</h3>
+                <p class="text-xs mt-1 text-amber-700/80 dark:text-amber-400/80 leading-relaxed">
+                    Halaman ini digunakan untuk mendaftarkan <b>Master Data Barang baru</b> yang belum pernah ada di sistem. <br>
+                    Jika barang sudah terdaftar dan Anda hanya ingin <b>menambah stok (kulakan/pembelian lagi)</b>, jangan gunakan halaman ini karena akan membuat data ganda! Gunakan menu <a href="{{ route('barang-masuk.create') }}" class="font-bold underline hover:text-amber-800 dark:hover:text-amber-300">Transaksi > Barang Masuk</a>.
+                </p>
+            </div>
+        </div>
+
         <form action="{{ route('barang.store') }}" method="POST" class="space-y-6">
             @csrf
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

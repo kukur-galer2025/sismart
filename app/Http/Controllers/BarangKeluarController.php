@@ -45,6 +45,7 @@ class BarangKeluarController extends Controller
             'tanggal' => 'required|date',
             'jumlah' => 'required|integer|min:1',
             'tujuan' => 'nullable|string|max:255',
+            'harga_jual_satuan' => 'nullable|numeric|min:0',
             'keterangan' => 'nullable|string',
         ]);
 

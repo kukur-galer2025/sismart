@@ -9,6 +9,8 @@
         list: @js($barangs->map(fn($b) => ['id'=>$b->id,'nama'=>$b->nama,'kode'=>$b->kode,'stok'=>$b->stok,'satuan'=>$b->satuan,'harga_rata_rata'=>$b->harga_rata_rata,'metode_stok'=>$b->metode_stok])),
         pick(id) { this.sel = this.list.find(b => b.id == id) || null },
         get est() { return this.sel ? this.jumlah * this.sel.harga_rata_rata : 0 },
+        harga_jual: null,
+        get total_jual() { return (this.harga_jual || 0) * this.jumlah },
         get ok() { return !this.sel || this.jumlah <= this.sel.stok },
         fmt(v) { return new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',minimumFractionDigits:0}).format(v) }
     }">
@@ -35,8 +37,19 @@
                         </select>
                     </div>
                     <div>
-                        <label class="form-label"><i class="fas fa-building text-indigo-500"></i> Tujuan / Departemen</label>
-                        <input type="text" name="tujuan" value="{{ old('tujuan') }}" placeholder="Contoh: Dept. IT" class="form-input">
+                        <label class="form-label"><i class="fas fa-building text-indigo-500"></i> Tujuan / Pembeli</label>
+                        <input type="text" name="tujuan" value="{{ old('tujuan') }}" placeholder="Contoh: Dept. IT atau Pelanggan A" class="form-input">
+                    </div>
+                    <div class="p-4 rounded-xl border mt-2" style="background:var(--bg-sidebar); border-color:var(--border-color)">
+                        <div class="flex items-center gap-2 mb-3">
+                            <i class="fas fa-money-bill-wave text-emerald-500"></i>
+                            <span class="font-semibold text-sm">Penjualan (Opsional)</span>
+                        </div>
+                        <div>
+                            <label class="form-label text-xs">Harga Jual Satuan (Ke Pelanggan)</label>
+                            <input type="number" name="harga_jual_satuan" x-model.number="harga_jual" min="0" class="form-input text-sm" placeholder="Kosongi jika bukan penjualan">
+                            <p class="text-[10px] mt-1" style="color:var(--text-muted)"><i class="fas fa-info-circle"></i> Jika diisi, otomatis tercatat di Laba Rugi.</p>
+                        </div>
                     </div>
                 </div>
                 <div class="space-y-4">
@@ -51,9 +64,17 @@
                         <p x-show="!ok" class="text-xs text-rose-600 dark:text-rose-400 mt-1"><i class="fas fa-exclamation-triangle"></i> Melebihi stok!</p>
                     </div>
                     <div class="pt-4 mt-4 border-t" style="border-color:var(--border-color)">
-                        <p class="text-xs mb-1" style="color:var(--text-muted)"><i class="fas fa-calculator mr-1"></i> Estimasi Nilai</p>
-                        <p class="text-2xl font-bold text-rose-600 dark:text-rose-400" x-text="fmt(est)">Rp 0</p>
-                        <p class="text-[10px] mt-1" style="color:var(--text-muted)">*Nilai aktual dapat berbeda jika metode FIFO</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-xs mb-1" style="color:var(--text-muted)"><i class="fas fa-calculator mr-1"></i> Estimasi HPP</p>
+                                <p class="text-xl font-bold text-rose-600 dark:text-rose-400" x-text="fmt(est)">Rp 0</p>
+                                <p class="text-[9px] mt-1" style="color:var(--text-muted)">*Bisa beda jika FIFO</p>
+                            </div>
+                            <div x-show="harga_jual > 0" x-transition>
+                                <p class="text-xs mb-1" style="color:var(--text-muted)"><i class="fas fa-cash-register mr-1"></i> Total Penjualan</p>
+                                <p class="text-xl font-bold text-emerald-600 dark:text-emerald-400" x-text="fmt(total_jual)">Rp 0</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
