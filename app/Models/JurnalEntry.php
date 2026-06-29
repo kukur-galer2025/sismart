@@ -34,7 +34,18 @@ class JurnalEntry extends Model
     public static function generateKode(): string
     {
         $today = now()->format('Ymd');
-        $count = static::whereDate('created_at', today())->distinct('kode_jurnal')->count() + 1;
-        return 'JR-' . $today . '-' . str_pad($count, 4, '0', STR_PAD_LEFT);
+        $prefix = 'JR-' . $today . '-';
+
+        $lastKode = static::where('kode_jurnal', 'like', $prefix . '%')
+            ->orderByRaw('CAST(SUBSTRING(kode_jurnal, ?) AS UNSIGNED) DESC', [strlen($prefix) + 1])
+            ->value('kode_jurnal');
+
+        $nextNumber = 1;
+        if ($lastKode) {
+            $lastNumber = (int) substr($lastKode, strlen($prefix));
+            $nextNumber = $lastNumber + 1;
+        }
+
+        return $prefix . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
     }
 }

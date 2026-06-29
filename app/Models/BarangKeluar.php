@@ -39,7 +39,18 @@ class BarangKeluar extends Model
     public static function generateKode(): string
     {
         $today = now()->format('Ymd');
-        $count = static::whereDate('created_at', today())->count() + 1;
-        return 'BK-' . $today . '-' . str_pad($count, 4, '0', STR_PAD_LEFT);
+        $prefix = 'BK-' . $today . '-';
+
+        $lastKode = static::where('kode_transaksi', 'like', $prefix . '%')
+            ->orderByRaw('CAST(SUBSTRING(kode_transaksi, ?) AS UNSIGNED) DESC', [strlen($prefix) + 1])
+            ->value('kode_transaksi');
+
+        $nextNumber = 1;
+        if ($lastKode) {
+            $lastNumber = (int) substr($lastKode, strlen($prefix));
+            $nextNumber = $lastNumber + 1;
+        }
+
+        return $prefix . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
     }
 }
