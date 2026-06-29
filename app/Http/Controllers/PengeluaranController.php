@@ -82,7 +82,7 @@ class PengeluaranController extends Controller
             $jurnals = JurnalEntry::where('kode_jurnal', $kode_jurnal)->get();
             
             if ($jurnals->isEmpty()) {
-                throw new \Exception('Data jurnal tidak ditemukan.');
+                abort(404, 'Data jurnal tidak ditemukan.');
             }
 
             foreach ($jurnals as $jurnal) {

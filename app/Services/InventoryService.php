@@ -74,7 +74,9 @@ class InventoryService
             $jumlah = $data['jumlah'];
 
             if ($barang->stok < $jumlah) {
-                throw new \Exception("Stok tidak mencukupi! Stok tersedia: {$barang->stok}");
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'jumlah' => "Stok tidak mencukupi! Stok tersedia: {$barang->stok}"
+                ]);
             }
 
             // Calculate price based on stock method

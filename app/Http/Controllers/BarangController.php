@@ -72,7 +72,9 @@ class BarangController extends Controller
 
             if (!empty($validated['stok_awal']) && $validated['stok_awal'] > 0) {
                 if (empty($validated['harga_modal_awal'])) {
-                    throw new \Exception('Harga Modal Awal harus diisi jika Stok Awal lebih dari 0.');
+                    throw \Illuminate\Validation\ValidationException::withMessages([
+                        'harga_modal_awal' => 'Harga Modal Awal harus diisi jika Stok Awal lebih dari 0.'
+                    ]);
                 }
                 
                 // Catat stok awal sebagai transaksi Barang Masuk pertama
